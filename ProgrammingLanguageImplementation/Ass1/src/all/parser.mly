@@ -41,7 +41,7 @@ open Ast
 %type <Ast.program> main
 %%
 main:
-	typedefs procs EOF{ {typedefs = List.rev $1; procs = List.rev $2} }    /*   ----------------   here should be rev  */
+	typedefs procs { {typedefs = List.rev $1; procs = List.rev $2} }    /*   ----------------   here should be rev  */
 ;
 
 unMatch:
@@ -169,9 +169,9 @@ stmt:
 	| lvalue ASSIGN rvalue SEMICOLON { Assign($1,$3) }
 	| READ IDENT SEMICOLON {ReadExpre $2}
 	| WRITE STRING_CONST SEMICOLON {WriteExpre $2}
-	| IF THEN stmts FI {IfExpre $3}
-	| IF THEN stmts ELSE stmts FI {IfElseExpre ($3, $5)}
-	| WHILE DO stmts OD {WhileExpre $3}
+	| IF logicExpr THEN stmts FI {IfExpre($2,$4)}
+	| IF logicExpr THEN stmts ELSE stmts FI {IfElseExpre ($2,$4,$6)}
+	| WHILE logicExpr DO stmts OD {WhileExpre($2,$4)}
 
 
 

@@ -2,12 +2,14 @@ open Ast
 open Format
 open Printf
 
- let rec get_typeStmt stmt =
+let get_4spaces = "    "
+
+let rec get_typeStmt stmt =
 	match stmt with
-	| Primitivestmt(varident, Bool) -> String.concat "" [varident; ":"; "bool"]
-	| Primitivestmt(varident, Int) -> String.concat "" [varident; ":"; "int"]
-	| Highstmt(varident, customtype) -> String.concat "" [varident; ":"; customtype]
-	| Blockstmt(varident, block) -> String.concat "" [varident; ":"; "{"; (analysis block); "}"] 
+	| Primitivestmt(varident, Bool) -> String.concat "" [varident; " : "; "bool"]
+	| Primitivestmt(varident, Int) -> String.concat "" [varident; " : "; "int"]
+	| Highstmt(varident, customtype) -> String.concat "" [varident; " : "; customtype]
+	| Blockstmt(varident, block) -> String.concat "" [varident; " : "; "{"; (analysis block); "}"] 
 and analysis block =
 	match block with
 	| [] -> ""
@@ -17,11 +19,11 @@ and analysis block =
 let rec get_typeStmts stmts=
 	match stmts with
 	| [] -> ""
-	| x::tail -> String.concat "" [(get_typeStmt x) ; (get_typeStmts tail)]
+	| x::tail -> String.concat "" [(get_typeStmt x) ;", " ;(get_typeStmts tail)]
 
 let get_typeBlock typeblock = 
 	match typeblock with
-	| Typedef(stmts,typeident) -> String.concat "" ["typedef";"{";(get_typeStmts stmts);"}";typeident] (*list of stmt*)
+	| Typedef(stmts,typeident) -> String.concat "" ["typedef ";"{";(get_typeStmts stmts);"} ";typeident] (*list of stmt*)
 
 (*format is typdef list*)
 
@@ -29,8 +31,8 @@ let get_typeBlock typeblock =
 
 let get_bean_type beanType= 
 	match beanType with
-	| Bool -> String.concat "" ["bool "]
-	| Int -> String.concat "" ["int "]
+	| Bool -> String.concat "" ["bool"]
+	| Int -> String.concat "" ["int"]
 
 let get_parameter parameter= 
 	match parameter with
@@ -43,7 +45,7 @@ let rec get_parameters parameters =
 	match parameters with
 	| [] -> ""
 	| x::[] -> String.concat "" [(get_parameter x)]
-	| x::tail -> String.concat "" [(get_parameter x) ; "," ;(get_parameters tail)]
+	| x::tail -> String.concat "" [(get_parameter x) ; ", " ;(get_parameters tail)]
 
 
 let get_proc_header procHeader = 
@@ -338,7 +340,7 @@ and get_fieldInitializers fieldInitializers =
 	match fieldInitializers with
 	| [] -> ""
 	| x::[] -> String.concat "" [(get_fieldInitializer x)]
-	| x::tail -> String.concat "" [(get_fieldInitializer x);",";(get_fieldInitializers tail);]
+	| x::tail -> String.concat "" [(get_fieldInitializer x);", ";(get_fieldInitializers tail);]
 and get_structure fieldInitializers = 
 	match fieldInitializers with
 	| FieldInitializers(fieldInitializers) -> String.concat "" ["{";(get_fieldInitializers fieldInitializers);"}"]
@@ -364,14 +366,15 @@ let rec get_stmts stmts =
 					 | Assign(lvalue,rvalue) -> String.concat "" [(get_lvalue lvalue);" := ";(get_rvalue rvalue);";\n"]
 					 | ReadExpre (varName) ->  String.concat "" ["read "; varName; ";\n"]
 					 | WriteExpre (stringExpre) ->  String.concat "" ["write "; stringExpre; ";\n"]
-					 | IfExpre (ifStmts)  ->  String.concat "" ["if then\n"; get_stmts ifStmts; "fi\n"]
-					 | WhileExpre (whileStmts) ->  String.concat "" ["while do\n"; get_stmts whileStmts; "\nod\n"]
-					 | IfElseExpre (ifElseIfStmts, ifElseElseStmts) -> String.concat "" ["if then";  get_stmts ifElseIfStmts; "else\n"; get_stmts ifElseElseStmts; "fi\n"]
+					 | IfExpre (logicExpr,ifStmts)  ->  String.concat "" ["if ";(get_logicExpr logicExpr);" then\n";(get_stmts ifStmts); "\nfi\n"]
+					 | IfElseExpre (logicExpr,ifElseIfStmts, ifElseElseStmts) -> String.concat "" ["if ";(get_logicExpr logicExpr);" then\n";  get_stmts ifElseIfStmts; "else\n"; (get_stmts ifElseElseStmts); "\nfi\n"]
+					 | WhileExpre (logicExpr,whileStmts) ->  String.concat "" ["while ";(get_logicExpr logicExpr);" do\n"; (get_stmts whileStmts); "\nod\n"]
+
 
 let get_localVarDecl localVarDecl = 
 	match localVarDecl with
-	| ValTypeDecl(beanType,varName) -> String.concat "" [(get_bean_type beanType);" ";varName;";\n"]
-	| RefTypeDecl(refType,varName) -> String.concat "" [refType;" ";varName;";\n"]
+	| ValTypeDecl(beanType,varName) -> String.concat "" [get_4spaces;(get_bean_type beanType);" ";varName;";\n"]
+	| RefTypeDecl(refType,varName) -> String.concat "" [get_4spaces;refType;" ";varName;";\n"]
 
 
 let rec get_localVarDecls localVarDecls = 
@@ -383,12 +386,12 @@ let rec get_localVarDecls localVarDecls =
 
 let rec get_proc_body procBody = 
 	match procBody with
-	| { localVarDecls = localVarDecls; stmts = stmts } -> String.concat "" [(get_localVarDecls localVarDecls);(get_stmts stmts)]
+	| { localVarDecls = localVarDecls; stmts = stmts } -> String.concat "" [(get_localVarDecls localVarDecls);"\n";(get_stmts stmts)]
 
 
 let get_proc proc = 
 	match proc with
-	| Proc( procHeader , procBody ) -> String.concat "" ["proc ";(get_proc_header procHeader);"\n";(get_proc_body procBody);"\n";"end"]
+	| Proc( procHeader , procBody ) -> String.concat "" ["\nproc ";(get_proc_header procHeader);"\n";(get_proc_body procBody);"end"]
 
 let rec get_procs procs = 
 	match procs with
