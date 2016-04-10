@@ -46,7 +46,6 @@ main:
 
 unMatch:
  UNKNOW {}
-
 /*---------Typedef------*/
 	
 typedefs:
@@ -165,11 +164,24 @@ rvalue:
 	| alExpr {Alexpr($1)}
 	| structure {Structure($1)}
 
+expr:
+	| logicExpr {Logicexpr($1)}
+	| alExpr {Alexpr($1)}
+	| lvalue {Lvalue $1}
+
+exprList:
+	| exprList COMMA expr { $3 :: $1 }
+	| expr { $1 :: [] }
+	| { [] }
+
+
 stmt:
 	| lvalue ASSIGN rvalue SEMICOLON { Assign($1,$3) }
 	| READ IDENT SEMICOLON {ReadExpre $2}
 	| WRITE STRING_CONST SEMICOLON {WriteExpre $2}
 	| WRITE varName SEMICOLON {WriteVar $2}
+	| IDENT LPAREN exprList RPAREN SEMICOLON {ExprList($1,$3)}
+
 	| IF logicExpr THEN stmts FI {IfExpre($2,$4)}
 	| IF logicExpr THEN stmts ELSE stmts FI {IfElseExpre ($2,$4,$6)}
 	| WHILE logicExpr DO stmts OD {WhileExpre($2,$4)}

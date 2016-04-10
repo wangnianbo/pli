@@ -95,11 +95,22 @@ and fieldInitializer =
 and structure = 
   | FieldInitializers of fieldInitializer list
 
+
+type expr = 
+  | Logicexpr of logicExpr 
+  | Alexpr of alExpr
+  | Lvalue of lvalue
+
+
+type exprList = expr list
+
+
 type stmt = 
   | Assign of (lvalue * rvalue)
   | ReadExpre of (varName)
   | WriteExpre of (stringExpre)
   | WriteVar of (varName)
+  | ExprList of (ident * exprList)
   | IfExpre of ( logicExpr * ifStmts)
   | IfElseExpre of (logicExpr * ifStmts * elseStmts)
   | WhileExpre of (logicExpr * iwStmts)

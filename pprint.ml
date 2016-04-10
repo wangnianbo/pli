@@ -358,7 +358,19 @@ let get_stmt stmt =
 	| Assign(lvalue,rvalue) -> String.concat "" [(get_lvalue lvalue);" := ";(get_rvalue rvalue);";\n"]
 *)
 
-let add4Spaces  str =    String.concat "\n   "  [""; String.concat "\n   " ( Str.split (Str.regexp "\n") str )]
+let get_expr expr = 
+	match expr with
+	| Logicexpr(logicExpr) -> String.concat "" [(get_logicExpr logicExpr)]
+	| Alexpr(alExpr) -> String.concat "" [(get_alExpr alExpr)]
+	| Lvalue(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+
+
+let rec get_expList exprList= 
+	match exprList with
+	| [] -> ""
+	| x::[] -> String.concat "" [(get_expr x)]
+	| x::tail -> String.concat "" [(get_expr x);",";(get_expList tail)]
+
 
 let rec get_stmts stmts = 
 	match stmts with
@@ -371,6 +383,7 @@ let rec get_stmts stmts =
 					 | ReadExpre (varName) ->  String.concat "" [get_4spaces;"read "; varName; ";"]
 					 | WriteExpre (stringExpre) ->  String.concat "" [get_4spaces;"write "; stringExpre; ";"]
 					 | WriteVar  (varName)  ->  String.concat "" [get_4spaces;"write "; varName; ";"]
+					 | ExprList(ident,exprList) -> String.concat "" [ident;"("; get_expList exprList; ")";";\n"]
 					 | IfExpre (logicExpr,ifStmts)  ->  String.concat "" [get_4spaces;"if ";(get_logicExpr logicExpr);" then";add4Spaces(get_stmts ifStmts); "\n    fi"]
 					 | IfElseExpre (logicExpr,ifElseIfStmts, ifElseElseStmts) -> String.concat "" [get_4spaces;"if ";(get_logicExpr logicExpr);" then"; ( add4Spaces(get_stmts ifElseIfStmts)); "else";  add4Spaces(get_stmts ifElseElseStmts); "\n    fi"]
 					 | WhileExpre (logicExpr,whileStmts) ->  String.concat "" [get_4spaces;"while ";(get_logicExpr logicExpr);" do"; add4Spaces(get_stmts whileStmts); "\n    od"]
