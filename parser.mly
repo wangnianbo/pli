@@ -41,8 +41,11 @@ open Ast
 %type <Ast.program> main
 %%
 main:
-	typedefs procs { {typedefs = List.rev $1; procs = List.rev $2} }    /*   ----------------   here should be rev  */
+	typedefs procs EOF{ {typedefs = List.rev $1; procs = List.rev $2} }    /*   ----------------   here should be rev  */
 ;
+
+unMatch:
+ UNKNOW {}
 
 /*---------Typedef------*/
 	
@@ -112,6 +115,8 @@ alExpr:
   | alExpr MINUS alExpr { Ebinop ($1, Op_sub, $3) }
   | alExpr MUL alExpr { Ebinop ($1, Op_mul, $3) }
   | alExpr DIV alExpr { Ebinop ($1, Op_div, $3) }	
+  | LPAREN alExpr RPAREN { $2 }
+
 
 
 logicExpr:
@@ -163,7 +168,7 @@ rvalue:
 stmt:
 	| lvalue ASSIGN rvalue SEMICOLON { Assign($1,$3) }
 	| READ IDENT SEMICOLON {ReadExpre $2}
-	| WRITE STRINGEXPRE SEMICOLON {WriteExpre $2}
+	| WRITE STRING_CONST SEMICOLON {WriteExpre $2}
 	| IF THEN stmts FI {IfExpre $3}
 	| IF THEN stmts ELSE stmts FI {IfElseExpre ($3, $5)}
 	| WHILE DO stmts OD {WhileExpre $3}
