@@ -9,16 +9,19 @@ let alnum = alpha | digit | '_'
 let digits = digit+
 let ident = ('_' | alpha) alnum*
 let structKey = "typedef"
+
 let stringExc = [^'\"'] | [^'\t']
 let stringReq = '\"' stringExc * '\"'
+
 rule token = parse
   | [' ' '\t' '\n']    { token lexbuf }     (* skip blanks *)
   | '\n'          { Lexing.new_line lexbuf ; token lexbuf }
   | '-'?['0'-'9']+ as lxm { INT_CONST(int_of_string lxm) }
+  | stringReq as stringArg     { STRING_CONST stringArg }
   (* keywords *)
   | "write"        { WRITE }
   | "read"         { READ }
-  | stringReq as stringArg     {STRINGEXPRE (stringArg)}
+
   | "while"        { WHILE }
   | "do"           { DO }
   | "od"           { OD }
@@ -59,7 +62,7 @@ rule token = parse
   | "}"            { RBRACKET }
   | ident as lxm { IDENT lxm }
   | eof            { EOF }
-  | _      { token lexbuf }  
+  | _             { token lexbuf }            
 	
 
 

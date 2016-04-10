@@ -4,12 +4,13 @@ open Ast
 %}
 %token <bool> BOOL_CONST
 %token <int> INT_CONST
+%token <string> STRING_CONST
 %token <string> IDENT
 %token BOOL INT
 %token WRITE READ
 %token ASSIGN
 %token LPAREN RPAREN
-%token <string> STRINGEXPRE
+
 %token <char> UNKNOW
 %token PLUS MINUS MUL DIV
 %token SEMICOLON COMMA STRUCTKEY
@@ -28,26 +29,26 @@ open Ast
 
 %token EOF
 
-
+%left OR
+%left AND
+%nonassoc NOT
+%nonassoc EQUAL NOEQUAL SMALLER NOBIGGER BIGGER NOSMALLER
 %left PLUS MINUS        /* lowest precedence */
 %left MUL DIV         /* medium precedence */
+
 
 %start main             /* the entry point */
 %type <Ast.program> main
 %%
 main:
-	typedefs procs { {typedefs= $1; procs = List.rev $2} }
+	typedefs procs { {typedefs = List.rev $1; procs = List.rev $2} }    /*   ----------------   here should be rev  */
 ;
-
-unMatch:
-UNKNOW { print_char  $1}
-	
 
 /*---------Typedef------*/
 	
 typedefs:
 	/*multiple structs*/
-	typedef typedefs { $1::$2 }
+	| typedefs typedef  { $2::$1 }					/*   ----------------   change */
 	/*single struct*/
 	| typedef {$1 :: []}
 	| { [] }
@@ -60,6 +61,7 @@ typedef:
 				
 
 statement:
+	| IDENT COLON IDENT          	 { Highstmt ($1, $3) }	
 	| IDENT COLON basictype          { Primitivestmt ($1, $3) }
 	| IDENT COLON innertypedef       { Blockstmt ($1, $3) }
 
@@ -101,19 +103,62 @@ varName:
 	| IDENT { $1 }
 
 
-expr:
-  | BOOL_CONST { Ebool $1 }
+
+alExpr:
   | INT_CONST { Eint $1 }
   | lvalue { Elval $1 }
   /* Binary operators */
-  | expr PLUS expr { Ebinop ($1, Op_add, $3) }
-  | expr MINUS expr { Ebinop ($1, Op_sub, $3) }
-  | expr MUL expr { Ebinop ($1, Op_mul, $3) }
-  | expr DIV expr { Ebinop ($1, Op_div, $3) }
-  | LPAREN expr RPAREN { $2 }
+  | alExpr PLUS alExpr { Ebinop ($1, Op_add, $3) }
+  | alExpr MINUS alExpr { Ebinop ($1, Op_sub, $3) }
+  | alExpr MUL alExpr { Ebinop ($1, Op_mul, $3) }
+  | alExpr DIV alExpr { Ebinop ($1, Op_div, $3) }	
+
+
+logicExpr:
+	| BOOL_CONST { Ebool ($1) }
+
+	| logicExpr OR logicExpr { Ebinop4 ($1, Op_or, $3) }
+	| logicExpr AND logicExpr { Ebinop4 ($1, Op_and, $3) }
+	| NOT logicExpr { Eunop ( Op_not, $2) }
+
+
+  	| alExpr EQUAL alExpr { Ebinop1 ($1, Op_eq, $3) }
+  	| alExpr NOEQUAL alExpr { Ebinop1 ($1, Op_not_eq, $3) }
+
+  	| alExpr EQUAL logicExpr { Ebinop2 ($1, Op_eq, $3) }
+  	| alExpr NOEQUAL logicExpr { Ebinop2 ($1, Op_not_eq, $3) }
+
+   	| logicExpr EQUAL alExpr { Ebinop3 ($1, Op_eq, $3) }
+  	| logicExpr NOEQUAL alExpr { Ebinop3 ($1, Op_not_eq, $3) }
+
+  	| logicExpr EQUAL logicExpr { Ebinop4 ($1, Op_eq, $3) }
+  	| logicExpr NOEQUAL logicExpr { Ebinop4 ($1, Op_not_eq, $3) }
+
+  	| alExpr SMALLER alExpr { Ebinop1 ($1, Op_small_than, $3) }
+  	| alExpr NOBIGGER alExpr { Ebinop1 ($1, Op_small_and_eq, $3) }
+  	| alExpr BIGGER alExpr { Ebinop1 ($1, Op_large, $3) }
+  	| alExpr NOSMALLER alExpr { Ebinop1 ($1, Op_large_and_eq, $3) }
+
+
+    | LPAREN logicExpr RPAREN { $2 }
+
+
+
+fieldInitializer:
+	| IDENT EQUAL rvalue { FieldInitializerForm($1,$3) }
+
+fieldInitializers:
+	| fieldInitializer COMMA fieldInitializers {$1::$3}
+	| fieldInitializer {$1::[]}
+	| {[]}
+
+structure:
+	| LBRACKET fieldInitializers RBRACKET	{ FieldInitializers($2) }
 
 rvalue:
-	| expr {Rexpr($1)}
+	| logicExpr {Logicexpr($1)}
+	| alExpr {Alexpr($1)}
+	| structure {Structure($1)}
 
 stmt:
 	| lvalue ASSIGN rvalue SEMICOLON { Assign($1,$3) }
@@ -126,9 +171,8 @@ stmt:
 
 
 stmts:
-	| stmt stmts { $1 :: $2 }
+	| stmts stmt { $2 :: $1 }
 	| stmt { $1 :: [] }
-	| { [] } 
 
 
 localVarDecl:
@@ -137,16 +181,21 @@ localVarDecl:
 
 
 localVarDecls:
+	| localVarDecls localVarDecl { $2 :: $1 }
 	| localVarDecl { $1 :: [] }
 	| { [] }
 
 procBody:
-	| localVarDecls stmts { { localVarDecls = $1; stmts = $2 } }
+	| stmts { { localVarDecls = []; stmts = $1 } }
+	| localVarDecls stmts { { localVarDecls = List.rev $1; stmts =  List.rev $2 } }
+
 
 
 paremeter:
 	| varD beanType varName 	{ValP($1,$2,$3)}
 	| refD varName varName 	{RefP($1,$2,$3)}
+	| refD beanType varName 	{RefBeanP($1,$2,$3)}
+
 
 
 paremeters:
@@ -163,6 +212,6 @@ proc:
 
 
 procs:
-	| proc procs { $1 :: $2 }
+	| procs proc { $2 :: $1 }
 	| proc { $1 :: [] }
 	| { [] } 
