@@ -371,6 +371,7 @@ let rec get_expList exprList=
 	| x::[] -> String.concat "" [(get_expr x)]
 	| x::tail -> String.concat "" [(get_expr x);",";(get_expList tail)]
 
+let add4Spaces  str =    String.concat "\n   "  [""; String.concat "\n   " ( Str.split (Str.regexp "\n") str )]
 
 let rec get_stmts stmts = 
 	match stmts with
