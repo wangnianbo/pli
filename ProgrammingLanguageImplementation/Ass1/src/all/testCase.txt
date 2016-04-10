@@ -1,0 +1,20 @@
+typedef {f1 : int, f2 :{ g1 : bool, g2 : bool }} a_recordtypedef {used : bool,rec : a_record} b_recordproc q ( val bool x       , ref b_record k       , ref b_record k       , ref b_record k       , ref b_record k       , ref b_record k           )
+
+
+int i;
+
+k.f.f := i + (((-1 + 2)) /3) + ((5 - 6) /3);
+k.f.f := i + (((－3+ t)) /3) + ((t - 6) /3);
+
+b := (((add)*((a* d))+1234)/23423*(d- -4));
+
+
+end
+
+proc q ( val bool x       , ref b_record k       , ref b_record k       , ref b_record k       , ref b_record k       , ref b_record k           )
+
+end
+
+proc q ( val bool x       , ref b_record k       , ref b_record k       , ref b_record k       , ref b_record k       , ref b_record k           )
+
+end
