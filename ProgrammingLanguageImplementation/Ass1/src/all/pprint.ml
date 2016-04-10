@@ -2,7 +2,7 @@ open Ast
 open Format
 open Printf
 
- let rec get_stmt stmt =
+ let rec get_typeStmt stmt =
 	match stmt with
 	| Primitivestmt(varident, Bool) -> String.concat "" [varident; ":"; "bool"]
 	| Primitivestmt(varident, Int) -> String.concat "" [varident; ":"; "int"]
@@ -10,17 +10,17 @@ open Printf
 and analysis block =
 	match block with
 	| [] -> ""
-	| x::tail -> String.concat "" [get_stmt x; analysis tail]
+	| x::tail -> String.concat "" [get_typeStmt x; analysis tail]
 
 
-let rec get_stmts stmts=
+let rec get_typeStmts stmts=
 	match stmts with
 	| [] -> ""
-	| x::tail -> String.concat "" [(get_stmt x) ; (get_stmts tail)]
+	| x::tail -> String.concat "" [(get_typeStmt x) ; (get_typeStmts tail)]
 
 let get_typeBlock typeblock = 
 	match typeblock with
-	| Typedef(stmts,typeident) -> String.concat "" ["typedef";"{";(get_stmts stmts);"}";typeident] (*list of stmt*)
+	| Typedef(stmts,typeident) -> String.concat "" ["typedef";"{";(get_typeStmts stmts);"}";typeident] (*list of stmt*)
 	| _ -> "nothing in typeblock" 
 
 (*format is typdef list*)
@@ -154,18 +154,27 @@ let rec get_expr expr =
 let get_rvalue rvalue = 
 	match rvalue with
 	| Rexpr(expr) -> String.concat "" [(get_expr expr)]
-
-let get_stmt stmt = 
+(*
+let rec get_stmt stmt = 
 	match stmt with
 	| Assign(lvalue,rvalue) -> String.concat "" [(get_lvalue lvalue);" := ";(get_rvalue rvalue);";\n"]
-
+	| ReadExpre (varName) ->  String.concat "" ["read "; varName; ";\n"]
+	| WriteExpre (stringExpre) ->  String.concat "" ["write "; stringExpre; ";\n"]
+	| IfExpre (ifStmts)  ->  String.concat "" ["if then"; get_ifStmts ifStmts; "fi\n"]
+and 
+*)
 
 let rec get_stmts stmts = 
 	match stmts with
 	| [] -> ""
 	| x::[] -> String.concat "" [(get_stmt x);";\n"]
 	| x::tail -> String.concat "" [(get_stmt x);(get_stmts tail);";\n"]
-
+		and  get_stmt x =
+					 match x with
+					 | Assign(lvalue,rvalue) -> String.concat "" [(get_lvalue lvalue);" := ";(get_rvalue rvalue);";\n"]
+					 | ReadExpre (varName) ->  String.concat "" ["read "; varName; ";\n"]
+					 | WriteExpre (stringExpre) ->  String.concat "" ["write "; stringExpre; ";\n"]
+					 | IfExpre (ifStmts)  ->  String.concat "" ["if then"; get_stmts ifStmts; "fi\n"]
 
 let get_localVarDecl localVarDecl = 
 	match localVarDecl with
