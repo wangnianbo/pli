@@ -169,6 +169,7 @@ stmt:
 	| lvalue ASSIGN rvalue SEMICOLON { Assign($1,$3) }
 	| READ IDENT SEMICOLON {ReadExpre $2}
 	| WRITE STRING_CONST SEMICOLON {WriteExpre $2}
+	| WRITE varName SEMICOLON {WriteVar $2}
 	| IF logicExpr THEN stmts FI {IfExpre($2,$4)}
 	| IF logicExpr THEN stmts ELSE stmts FI {IfElseExpre ($2,$4,$6)}
 	| WHILE logicExpr DO stmts OD {WhileExpre($2,$4)}

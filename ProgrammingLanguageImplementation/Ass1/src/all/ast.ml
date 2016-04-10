@@ -99,6 +99,7 @@ type stmt =
   | Assign of (lvalue * rvalue)
   | ReadExpre of (varName)
   | WriteExpre of (stringExpre)
+  | WriteVar of (varName)
   | IfExpre of ( logicExpr * ifStmts)
   | IfElseExpre of (logicExpr * ifStmts * elseStmts)
   | WhileExpre of (logicExpr * iwStmts)
