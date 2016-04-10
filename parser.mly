@@ -1,4 +1,4 @@
-/* File parser.mly o */
+/* File parser.mly */
 %{
 open Ast
 %}
@@ -9,7 +9,7 @@ open Ast
 %token WRITE READ
 %token ASSIGN
 %token LPAREN RPAREN
-
+%token <string> STRINGEXPRE
 %token PLUS MINUS MUL DIV
 %token SEMICOLON COMMA STRUCTKEY
 
@@ -112,6 +112,9 @@ rvalue:
 
 stmt:
 	| lvalue ASSIGN rvalue SEMICOLON { Assign($1,$3) }
+	| READ IDENT SEMICOLON {ReadExpre $2}
+	| WRITE STRINGEXPRE SEMICOLON {WriteExpre $2}
+	| IF THEN stmts IF {IfExpre $3}
 
 
 

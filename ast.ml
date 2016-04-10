@@ -3,7 +3,7 @@
 type procName = string
 
 type varName = string
-
+type stringExpre = string
 type refType = string
 
 
@@ -69,8 +69,12 @@ type rvalue =
 
 type stmt = 
   | Assign of (lvalue * rvalue)
-
-
+  | ReadExpre of (varName)
+  | WriteExpre of (stringExpre)
+  | IfExpre of (ifStmts)
+and
+ ifStmts = stmt list
+  
 type localVarDecl = 
   | ValTypeDecl of (beanType * varName)
   | RefTypeDecl of (refType * varName)
