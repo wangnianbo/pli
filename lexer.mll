@@ -12,14 +12,13 @@ let structKey = "typedef"
 
 let stringExc = [^'\"'] | [^'\t']
 let stringReq = '\"' stringExc * '\"'
-let comment = "#" [^'\n']*"aaaa"
+
 rule token = parse
-    comment {token lexbuf}
    | stringReq as stringArg     { STRING_CONST stringArg }
   | [' ' '\t' '\n']    { token lexbuf }     (* skip blanks *)
   | '\n'          { Lexing.new_line lexbuf ; token lexbuf }
   | '-'?['0'-'9']+ as lxm { INT_CONST(int_of_string lxm) }
- 
+
   (* keywords *)
   | "write"        { WRITE }
   | "read"         { READ }
@@ -64,7 +63,7 @@ rule token = parse
   | "}"            { RBRACKET }
   | ident as lxm { IDENT lxm }
   | eof            { EOF }
-  | _      { token lexbuf }        
+  | _             { token lexbuf }            
 	
 
 

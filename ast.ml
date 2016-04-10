@@ -99,9 +99,9 @@ type stmt =
   | Assign of (lvalue * rvalue)
   | ReadExpre of (varName)
   | WriteExpre of (stringExpre)
-  | IfExpre of (iwStmts)
-  | WhileExpre of (iwStmts)
-  | IfElseExpre of (ifStmts * elseStmts)
+  | IfExpre of ( logicExpr * ifStmts)
+  | IfElseExpre of (logicExpr * ifStmts * elseStmts)
+  | WhileExpre of (logicExpr * iwStmts)
  and
  iwStmts = stmt list	
  and
