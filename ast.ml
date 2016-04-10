@@ -109,7 +109,7 @@ type stmt =
   | Assign of (lvalue * rvalue)
   | ReadExpre of (varName)
   | WriteExpre of (stringExpre)
-  | WriteVar of (varName)
+  | WriteVar of (expr)
   | ExprList of (ident * exprList)
   | IfExpre of ( logicExpr * ifStmts)
   | IfElseExpre of (logicExpr * ifStmts * elseStmts)

@@ -114,6 +114,7 @@ alExpr:
   | alExpr MINUS alExpr { Ebinop ($1, Op_sub, $3) }
   | alExpr MUL alExpr { Ebinop ($1, Op_mul, $3) }
   | alExpr DIV alExpr { Ebinop ($1, Op_div, $3) }	
+  | MINUS alExpr { Eunop ( Op_minus, $2) }
   | LPAREN alExpr RPAREN { $2 }
 
 
@@ -179,7 +180,7 @@ stmt:
 	| lvalue ASSIGN rvalue SEMICOLON { Assign($1,$3) }
 	| READ IDENT SEMICOLON {ReadExpre $2}
 	| WRITE STRING_CONST SEMICOLON {WriteExpre $2}
-	| WRITE varName SEMICOLON {WriteVar $2}
+	| WRITE expr SEMICOLON {WriteVar $2}
 	| IDENT LPAREN exprList RPAREN SEMICOLON {ExprList($1,$3)}
 
 	| IF logicExpr THEN stmts FI {IfExpre($2,$4)}

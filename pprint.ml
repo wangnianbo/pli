@@ -169,79 +169,6 @@ let rec get_expr expr =
  *)
 
 
-
- let rec get_expr_followed_is_plus expr = 
-	match expr with
-	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
-	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
-	| Ebinop (expr1,Op_add,expr2) -> String.concat "" [(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2)]
-	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2)]
-	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
-	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2)]
-	| _ -> String.concat "" []
-and get_expr_followed_is_sub expr = 
-	match expr with
-	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
-	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
-	| Ebinop (expr1,Op_add,expr2) -> String.concat "" [(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2)]
-	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2)]
-	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2);]
-	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2);]
-	| _ -> String.concat "" []
-and get_expr_followed_is_mul expr = 
-	match expr with
-	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
-	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
-	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
-	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
-	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
-	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2)]
-	| _ -> String.concat "" []
-and get_expr_followed_is_div expr = 
-	match expr with
-	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
-	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
-	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
-	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
-	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
-	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2)]
-	| _ -> String.concat "" []
-and get_expr_pre_is_plus expr = 
-	match expr with
-	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
-	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
-	| Ebinop (expr1,Op_add,expr2) -> String.concat "" [(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2)]
-	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2)]
-	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
-	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2)]
-	| _ -> String.concat "" []
-and get_expr_pre_is_sub expr = 
-	match expr with
-	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
-	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
-	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
-	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
-	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
-	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" / ";(get_expr_pre_is_div expr2)]
-	| _ -> String.concat "" []
-and get_expr_pre_is_mul expr = 
-	match expr with
-	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
-	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
-	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
-	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
-	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
-	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" / ";(get_expr_pre_is_div expr2)]
-	| _ -> String.concat "" []
-and get_expr_pre_is_div expr = 
-	match expr with
-	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
-	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
-	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
-	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
-	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" ["(";(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2);")"]
-	| Ebinop (expr1,Op_div,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" / ";(get_expr_pre_is_div expr2);")"]
-	| _ -> String.concat "" []
 let rec get_alExpr expr = 
 	match expr with
 	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
@@ -251,7 +178,102 @@ let rec get_alExpr expr =
 	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2)]
 	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
 	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" / ";(get_expr_pre_is_div expr2)]
+	| Eunop ( Op_minus, expr2) -> String.concat "" [" -";(get_expr_pre_is_div expr2)]
 	| _ -> String.concat "" [] 
+and get_expr_followed_is_plus expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" [(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2)]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2)]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2)]
+	| Eunop ( Op_minus, expr2) -> String.concat "" [" -";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_followed_is_sub expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" [(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2)]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2)]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2);]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2);]
+	| Eunop ( Op_minus, expr2) -> String.concat "" [" -";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_followed_is_mul expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2)]
+	| Eunop ( Op_minus, expr2) -> String.concat "" [" -";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_followed_is_div expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2)]
+	| Eunop ( Op_minus, expr2) -> String.concat "" [" -";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_pre_is_plus expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" [(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2)]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2)]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2)]
+	| Eunop ( Op_minus, expr2) -> String.concat "" [" -";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_pre_is_sub expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" / ";(get_expr_pre_is_div expr2)]
+	| Eunop ( Op_minus, expr2) -> String.concat "" [" -";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_pre_is_mul expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" / ";(get_expr_pre_is_div expr2)]
+	| Eunop ( Op_minus, expr2) -> String.concat "" [" -";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_pre_is_div expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" ["(";(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2);")"]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" / ";(get_expr_pre_is_div expr2);")"]
+	| Eunop ( Op_minus, expr2) -> String.concat "" [" -";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_pre_is_minus expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| Elval(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| _ -> String.concat "" ["(";(get_alExpr expr);")"] 
+
 
 
 
@@ -371,7 +393,10 @@ let rec get_expList exprList=
 	| x::[] -> String.concat "" [(get_expr x)]
 	| x::tail -> String.concat "" [(get_expr x);",";(get_expList tail)]
 
+
+
 let add4Spaces  str =    String.concat "\n   "  [""; String.concat "\n   " ( Str.split (Str.regexp "\n") str )]
+
 
 let rec get_stmts stmts = 
 	match stmts with
@@ -383,7 +408,7 @@ let rec get_stmts stmts =
 					 | Assign(lvalue,rvalue) -> String.concat "" [get_4spaces;(get_lvalue lvalue);" := ";(get_rvalue rvalue);";"]
 					 | ReadExpre (varName) ->  String.concat "" [get_4spaces;"read "; varName; ";"]
 					 | WriteExpre (stringExpre) ->  String.concat "" [get_4spaces;"write "; stringExpre; ";"]
-					 | WriteVar  (varName)  ->  String.concat "" [get_4spaces;"write "; varName; ";"]
+					 | WriteVar  (expr)  ->  String.concat "" [get_4spaces;"write "; get_expr expr; ";"]
 					 | ExprList(ident,exprList) -> String.concat "" [ident;"("; get_expList exprList; ")";";\n"]
 					 | IfExpre (logicExpr,ifStmts)  ->  String.concat "" [get_4spaces;"if ";(get_logicExpr logicExpr);" then";add4Spaces(get_stmts ifStmts); "\n    fi"]
 					 | IfElseExpre (logicExpr,ifElseIfStmts, ifElseElseStmts) -> String.concat "" [get_4spaces;"if ";(get_logicExpr logicExpr);" then"; ( add4Spaces(get_stmts ifElseIfStmts)); "else";  add4Spaces(get_stmts ifElseElseStmts); "\n    fi"]
