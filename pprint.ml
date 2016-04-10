@@ -1,6 +1,7 @@
 open Ast
 open Format
 open Printf
+open Str
 
 let get_4spaces = "    "
 
@@ -356,19 +357,23 @@ let get_stmt stmt =
 	match stmt with
 	| Assign(lvalue,rvalue) -> String.concat "" [(get_lvalue lvalue);" := ";(get_rvalue rvalue);";\n"]
 *)
+
+let add4Spaces  str =    String.concat "\n   "  [""; String.concat "\n   " ( Str.split (Str.regexp "\n") str )]
+
 let rec get_stmts stmts = 
 	match stmts with
 	| [] -> ""
 	| x::[] -> String.concat "" [(get_stmt x);]
-	| x::tail -> String.concat "" [(get_stmt x);(get_stmts tail);]
+	| x::tail -> String.concat "\n" [(get_stmt x);(get_stmts tail);]
 		and  get_stmt x =
 					 match x with
-					 | Assign(lvalue,rvalue) -> String.concat "" [(get_lvalue lvalue);" := ";(get_rvalue rvalue);";\n"]
-					 | ReadExpre (varName) ->  String.concat "" ["read "; varName; ";\n"]
-					 | WriteExpre (stringExpre) ->  String.concat "" ["write "; stringExpre; ";\n"]
-					 | IfExpre (logicExpr,ifStmts)  ->  String.concat "" ["if ";(get_logicExpr logicExpr);" then\n";(get_stmts ifStmts); "\nfi\n"]
-					 | IfElseExpre (logicExpr,ifElseIfStmts, ifElseElseStmts) -> String.concat "" ["if ";(get_logicExpr logicExpr);" then\n";  get_stmts ifElseIfStmts; "else\n"; (get_stmts ifElseElseStmts); "\nfi\n"]
-					 | WhileExpre (logicExpr,whileStmts) ->  String.concat "" ["while ";(get_logicExpr logicExpr);" do\n"; (get_stmts whileStmts); "\nod\n"]
+					 | Assign(lvalue,rvalue) -> String.concat "" [get_4spaces;(get_lvalue lvalue);" := ";(get_rvalue rvalue);";"]
+					 | ReadExpre (varName) ->  String.concat "" [get_4spaces;"read "; varName; ";"]
+					 | WriteExpre (stringExpre) ->  String.concat "" [get_4spaces;"write "; stringExpre; ";"]
+					 | WriteVar  (varName)  ->  String.concat "" [get_4spaces;"write "; varName; ";"]
+					 | IfExpre (logicExpr,ifStmts)  ->  String.concat "" [get_4spaces;"if ";(get_logicExpr logicExpr);" then";add4Spaces(get_stmts ifStmts); "\n    fi"]
+					 | IfElseExpre (logicExpr,ifElseIfStmts, ifElseElseStmts) -> String.concat "" [get_4spaces;"if ";(get_logicExpr logicExpr);" then"; ( add4Spaces(get_stmts ifElseIfStmts)); "else";  add4Spaces(get_stmts ifElseElseStmts); "\n    fi"]
+					 | WhileExpre (logicExpr,whileStmts) ->  String.concat "" [get_4spaces;"while ";(get_logicExpr logicExpr);" do"; add4Spaces(get_stmts whileStmts); "\n    od"]
 
 
 let get_localVarDecl localVarDecl = 
@@ -391,7 +396,7 @@ let rec get_proc_body procBody =
 
 let get_proc proc = 
 	match proc with
-	| Proc( procHeader , procBody ) -> String.concat "" ["\nproc ";(get_proc_header procHeader);"\n";(get_proc_body procBody);"end"]
+	| Proc( procHeader , procBody ) -> String.concat "" ["\nproc ";(get_proc_header procHeader);"\n";(get_proc_body procBody);"\nend"]
 
 let rec get_procs procs = 
 	match procs with

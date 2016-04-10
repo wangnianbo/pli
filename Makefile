@@ -34,10 +34,10 @@ opt: $(TARGETS)
 	$(OCAMLYACC) $^
 
 bean.byte : $(CMOFILES) bean.cmo
-	ocamlc -g -o $@ $^
+	ocamlc -g -o  $@ str.cma $^
 
-bean : $(CMXFILES) bean.cmx
-	ocamlopt -g -o $@ $^
+bean :  $(CMXFILES) bean.cmx
+	ocamlopt -g -o $@ str.cmxa $^
 
 clean :
 	rm -f *.cmo *.cmi *.cmx *.o
