@@ -1,0 +1,15 @@
+bean.cmo :
+bean.cmx :
+ast.cmi :
+parser.cmi : ast.cmi
+pprint.cmi :
+ast.cmo : ast.cmi
+ast.cmx : ast.cmi
+lexer.cmo : parser.cmi
+lexer.cmx : parser.cmx
+parser.cmo : ast.cmi parser.cmi
+parser.cmx : ast.cmx parser.cmi
+pprint.cmo : pprint.cmi
+pprint.cmx : pprint.cmi
+bean.cmo :
+bean.cmx :
