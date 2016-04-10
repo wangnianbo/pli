@@ -71,10 +71,16 @@ type stmt =
   | Assign of (lvalue * rvalue)
   | ReadExpre of (varName)
   | WriteExpre of (stringExpre)
-  | IfExpre of (ifStmts)
-and
+  | IfExpre of (iwStmts)
+  | WhileExpre of (iwStmts)
+  | IfElseExpre of (ifStmts * elseStmts)
+ and
+ iwStmts = stmt list	
+ and
  ifStmts = stmt list
-  
+ and
+ elseStmts = stmt list
+ 
 type localVarDecl = 
   | ValTypeDecl of (beanType * varName)
   | RefTypeDecl of (refType * varName)

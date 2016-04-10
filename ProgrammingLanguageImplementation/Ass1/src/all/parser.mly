@@ -10,11 +10,12 @@ open Ast
 %token ASSIGN
 %token LPAREN RPAREN
 %token <string> STRINGEXPRE
+%token <char> UNKNOW
 %token PLUS MINUS MUL DIV
 %token SEMICOLON COMMA STRUCTKEY
 
 %token WHILE DO OD
-%token IF THEN FI
+%token IF THEN FI ELSE
 
 %token OR AND NOT EQUAL BIGGER SMALLER NOEQUAL NOBIGGER NOSMALLER
 %token INT BOOL
@@ -37,6 +38,10 @@ open Ast
 main:
 	typedefs procs { {typedefs= $1; procs = List.rev $2} }
 ;
+
+unMatch:
+UNKNOW { print_char  $1}
+	
 
 /*---------Typedef------*/
 	
@@ -114,7 +119,9 @@ stmt:
 	| lvalue ASSIGN rvalue SEMICOLON { Assign($1,$3) }
 	| READ IDENT SEMICOLON {ReadExpre $2}
 	| WRITE STRINGEXPRE SEMICOLON {WriteExpre $2}
-	| IF THEN stmts IF {IfExpre $3}
+	| IF THEN stmts FI {IfExpre $3}
+	| IF THEN stmts ELSE stmts FI {IfElseExpre ($3, $5)}
+	| WHILE DO stmts OD {WhileExpre $3}
 
 
 

@@ -174,7 +174,9 @@ let rec get_stmts stmts =
 					 | Assign(lvalue,rvalue) -> String.concat "" [(get_lvalue lvalue);" := ";(get_rvalue rvalue);";\n"]
 					 | ReadExpre (varName) ->  String.concat "" ["read "; varName; ";\n"]
 					 | WriteExpre (stringExpre) ->  String.concat "" ["write "; stringExpre; ";\n"]
-					 | IfExpre (ifStmts)  ->  String.concat "" ["if then"; get_stmts ifStmts; "fi\n"]
+					 | IfExpre (ifStmts)  ->  String.concat "" ["if then\n"; get_stmts ifStmts; "fi\n"]
+					 | WhileExpre (whileStmts) ->  String.concat "" ["while do\n"; get_stmts whileStmts; "\nod\n"]
+					 | IfElseExpre (ifElseIfStmts, ifElseElseStmts) -> String.concat "" ["if then";  get_stmts ifElseIfStmts; "else\n"; get_stmts ifElseElseStmts; "fi\n"]
 
 let get_localVarDecl localVarDecl = 
 	match localVarDecl with
