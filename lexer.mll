@@ -24,6 +24,7 @@ rule token = parse
   | "od"           { OD }
   | "if"           { IF }
   | "then"         { THEN }
+  | "else"         { ELSE }
   | "fi"           { FI } 
   | "or"           { OR }
   | "and"          { AND }
@@ -58,7 +59,7 @@ rule token = parse
   | "}"            { RBRACKET }
   | ident as lxm { IDENT lxm }
   | eof            { EOF }
-  | _             { token lexbuf }            
+  | _      { token lexbuf }  
 	
 
 
