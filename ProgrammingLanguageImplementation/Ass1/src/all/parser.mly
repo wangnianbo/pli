@@ -119,6 +119,9 @@ alExpr:
   | MINUS alExpr { EunopInAlExpr ( Op_minus, $2) }
   | LPAREN alExpr RPAREN { $2 }
 
+simpleLogicExpr:
+	| lvalue { ElvalInSimpleLogicExpr($1) }
+	| NOT lvalue { EunopInSimpleLogicExpr ( Op_not, $2) }
 
 
 logicExpr:
@@ -186,8 +189,13 @@ stmt:
 	| WRITE expr SEMICOLON {WriteVar $2}
 	| IDENT LPAREN exprList RPAREN SEMICOLON {ExprList($1,List.rev $3)}
 
+	| IF simpleLogicExpr THEN stmts FI {IfExpreInSimple($2,List.rev $4)}
 	| IF logicExpr THEN stmts FI {IfExpre($2,List.rev $4)}
+	
+	| IF simpleLogicExpr THEN stmts ELSE stmts FI {IfElseExpreInSimple ($2,List.rev $4,List.rev $6)}
 	| IF logicExpr THEN stmts ELSE stmts FI {IfElseExpre ($2,List.rev $4,List.rev $6)}
+	
+	| WHILE simpleLogicExpr DO stmts OD {WhileExpreInSimple($2,List.rev $4)}
 	| WHILE logicExpr DO stmts OD {WhileExpre($2,List.rev $4)}
 
 

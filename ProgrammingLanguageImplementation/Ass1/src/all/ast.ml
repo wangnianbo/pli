@@ -81,6 +81,10 @@ type alExpr =
   | Ebinop of (alExpr * binop * alExpr)
   | EunopInAlExpr of (unop * alExpr)
 
+type simpleLogicExpr =
+  | ElvalInSimpleLogicExpr of lvalue
+  | EunopInSimpleLogicExpr of ( unop * lvalue)
+  
 type logicExpr = 
   | Ebool of bool
   | ElvalInLogicExpr of lvalue
@@ -116,8 +120,11 @@ type stmt =
   | WriteExpre of (stringExpre)
   | WriteVar of (expr)
   | ExprList of (ident * exprList)
+  | IfExpreInSimple of (simpleLogicExpr * ifStmts)
   | IfExpre of ( logicExpr * ifStmts)
+  | IfElseExpreInSimple of (simpleLogicExpr * ifStmts * elseStmts)
   | IfElseExpre of (logicExpr * ifStmts * elseStmts)
+  | WhileExpreInSimple of (simpleLogicExpr * iwStmts)
   | WhileExpre of (logicExpr * iwStmts)
  and
  iwStmts = stmt list	
