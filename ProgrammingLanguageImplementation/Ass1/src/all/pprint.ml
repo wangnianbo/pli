@@ -3,8 +3,12 @@ open Format
 open Printf
 open Str
 
+
+
+
 let get_4spaces = "    "
 
+(* type define statement *)
 let rec get_typeStmt stmt =
 	match stmt with
 	| Primitivestmt(varident, Bool) -> String.concat "" [varident; " : "; "bool"]
@@ -17,7 +21,7 @@ and analysis block =
 	| x::[] -> String.concat "" [get_typeStmt x]
 	| x::tail -> String.concat "" [get_typeStmt x;", " ; analysis tail]
 
-
+(* get the list of statements in type define section *)
 let rec get_typeStmts stmts=
 	match stmts with
 	| [] -> ""
@@ -35,12 +39,13 @@ let get_typeBlock typeblock =
 (*format is typdef list*)
 
 
-
+(* get primitive bean type *)
 let get_bean_type beanType= 
 	match beanType with
 	| Bool -> String.concat "" ["bool"]
 	| Int -> String.concat "" ["int"]
 
+(* get the parameter in procs *)
 let get_parameter parameter= 
 	match parameter with
   	| ValP(varD , beanType , varName) -> String.concat "" ["val "; (get_bean_type beanType) ;" ";  varName]
@@ -48,7 +53,7 @@ let get_parameter parameter=
    	| ValBeanP(varD , refType , varName) -> String.concat "" ["val "; refType;" "; varName]
   	| RefBeanP(refD , beanType , varName) -> String.concat "" ["ref "; (get_bean_type beanType);" "; varName]
 
-
+(* get the list of the parameter *)
 let rec get_parameters parameters = 
 	match parameters with
 	| [] -> ""
@@ -56,13 +61,14 @@ let rec get_parameters parameters =
 	| x::tail -> if List.length parameters > 1 then String.concat "" [(get_parameter x) ; ", " ;(get_parameters tail)]
 												else get_parameter x
 
-
+												
+(* get the header of the proc *)
 let get_proc_header procHeader = 
 	match procHeader with
 	| ProcHeader( procName , parameters ) -> String.concat "" [procName;"(";(get_parameters parameters);")"]
 
 
-
+(* get the left value of general statement *)
 let rec get_lvalue lvalue = 
 	match lvalue with
 	| LId(ident) -> String.concat "" [ident]
@@ -70,7 +76,7 @@ let rec get_lvalue lvalue =
 
 
 
-
+(* set parenthsis to the algebra expression *)
 let rec get_alExpr expr = 
 	match expr with
 	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
@@ -179,7 +185,7 @@ and get_expr_pre_is_minus expr =
 
 
 
-
+(* get logic expression *)
 let rec get_logicExpr expr = 
 	match expr with
 	| Ebool(boolVal) -> String.concat "" [(string_of_bool boolVal)]
@@ -285,18 +291,16 @@ and get_rvalue rvalue =
 
 	| Structure(structure) -> String.concat "" [(get_structure structure)]
 
-(*
-let get_stmt stmt = 
-	match stmt with
-	| Assign(lvalue,rvalue) -> String.concat "" [(get_lvalue lvalue);" := ";(get_rvalue rvalue);";\n"]
-*)
 
+(* get general expr *)
+	
 let get_expr expr = 
 	match expr with
 	| LogicexprInExpr(logicExpr) -> String.concat "" [(get_logicExpr logicExpr)]
 	| AlexprInExpr(alExpr) -> String.concat "" [(get_alExpr alExpr)]
 	| LvalueInExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
 
+(* get the list of expr *)
 
 let rec get_expList exprList= 
 	match exprList with
@@ -305,7 +309,7 @@ let rec get_expList exprList=
 	| x::tail -> String.concat "" [(get_expr x);", ";(get_expList tail)]
 
 
-
+(* add for spances to the expression *)
 let add4Spaces  str =    String.concat "\n    "  [""; String.concat "\n    " ( Str.split (Str.regexp "\n") str )]
 
 let get_simpleLogicExpr simpleLogicExpr =
@@ -313,7 +317,7 @@ let get_simpleLogicExpr simpleLogicExpr =
 	| ElvalInSimpleLogicExpr(lvalue) -> String.concat "" [get_lvalue lvalue]
 	| EunopInSimpleLogicExpr(binop,lvalue) -> String.concat "" ["not ";(get_lvalue lvalue)]
 
-
+(* get statement list *)
 let rec get_stmts stmts = 
 	match stmts with
 	| [] -> ""
@@ -340,6 +344,7 @@ let rec get_stmts stmts =
 					 | WhileExpre (logicExpr,whileStmts) ->  String.concat "" [get_4spaces;"while ";(get_logicExpr logicExpr);" do"; add4Spaces(get_stmts whileStmts); "\n    od"]
 
 
+(* get local variable declaration in procs *)
 let get_localVarDecl localVarDecl = 
 	match localVarDecl with
 	| ValTypeDecl(beanType,varName) -> String.concat "" [get_4spaces;(get_bean_type beanType);" ";varName;";\n"]
@@ -352,16 +357,18 @@ let rec get_localVarDecls localVarDecls =
 	| x::[] -> String.concat "" [(get_localVarDecl x)]
 	| x::tail -> String.concat "" [(get_localVarDecl x);(get_localVarDecls tail)]
 
-
+(* get procs body *)
 let rec get_proc_body procBody = 
 	match procBody with
 	| { localVarDecls = localVarDecls; stmts = stmts } -> String.concat "" [(get_localVarDecls localVarDecls);"\n";(get_stmts stmts)]
 
-
+(* get proc *)
 let get_proc proc = 
 	match proc with
 	| Proc( procHeader , procBody ) -> String.concat "" ["\nproc ";(get_proc_header procHeader);"\n";(get_proc_body procBody);"\nend"]
 
+	
+(* get list of proc *)
 let rec get_procs procs = 
 	match procs with
 	| [] -> ""
