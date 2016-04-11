@@ -123,7 +123,7 @@ alExpr:
 
 logicExpr:
 	| BOOL_CONST { Ebool ($1) }
-    | lvalue { ElvalInLogicExpr($1) }
+    | IDENT { ElvalInLogicExpr($1) }
 
 	| logicExpr OR logicExpr { Ebinop4 ($1, Op_or, $3) }
 	| logicExpr AND logicExpr { Ebinop4 ($1, Op_and, $3) }
