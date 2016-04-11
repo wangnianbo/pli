@@ -1,20 +1,31 @@
-typedef {f1 : int, f2 :{ g1 : bool, g2 : bool }} a_recordproc q ( val bool x       , ref b_record k       , ref b_record k       , ref b_record k       , ref b_record k       , ref b_record k           )
-
-
-int i;
-
-k.f.f := i + (((-1 + 2)) /3) + ((5 - 6) /3);
-k.f.f := i + (((－3+ t)) /3) + ((t - 6) /3);if then fi
-read wnb;write "waefawe\nf";
-b := (((add)*((a* d))+1234)/23423*(d- -4));
-
-
-end
-
-proc q ( val bool x       , ref b_record k       , ref b_record k       , ref b_record k       , ref b_record k       , ref b_record k           )	   int i;
-k.f.f := i + (((－3+ t)) /3) + ((t - 6) /3);
-end
-
-proc q ( val bool x       , ref b_record k       , ref b_record k       , ref b_record k       , ref b_record k       , ref b_record k           )
-
-end
+ proc main()
+     int x;
+     int y;
+     int temp;
+     int quotient;
+     int remainder;
+ 
+ write "fef"; write "Input two positive integers: "; 
+     read x;     read x;     read y;
+     write "\n";
+     if x < y then
+         temp := x;
+         x := y;
+         y := temp;
+     fi
+     write "The gcd of ";
+     write x;
+     write " and ";
+     write y;
+     write " is ";
+     quotient := x / y;
+     remainder := x - quotient * y;
+     while remainder > 0 do
+         x := y;
+         y := remainder;
+         quotient := x / y;
+         remainder := x - quotient * y;
+     od
+     write y;
+     write "\n";     read x;
+ end
