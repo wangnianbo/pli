@@ -1,0 +1,1314 @@
+============================================
+vis/nianbow.out
+16:55:18_Monday_11_April_2016
+============================================
+COMP90045 project - Test of parser and pretty-printer
+User:  nianbow
+
+--- Makefile found ---
+--- Running Makefile ---
+ocamlopt  -g -c ast.ml
+ocamlyacc parser.mly
+3 rules never reduced
+9 shift/reduce conflicts, 18 reduce/reduce conflicts.
+ocamlc  -c parser.mli
+ocamlopt  -g -c parser.ml
+ocamllex lexer.mll
+96 states, 5849 transitions, table size 23972 bytes
+ocamlopt  -g -c lexer.ml
+ocamlopt  -g -c pprint.ml
+ocamlopt  -g -c bean.ml
+ocamlopt -g -o bean str.cmxa ast.cmx lexer.cmx parser.cmx pprint.cmx bean.cmx
+
+--- Succeeded ---
+
+******************************************   Parsing lex01.bean:
+
+Okay
+
+******************************************   Parsing lex02.bean:
+
+Okay
+
+******************************************   Parsing lex03.bean:
+
+Okay
+
+******************************************   Parsing lex04.bean:
+
+Okay
+
+******************************************   Parsing syn01.bean:
+
+Okay
+
+******************************************   Parsing syn02.bean:
+
+Okay
+
+******************************************   Parsing prpr1.bean:
+
+Okay
+
+******************************************   Parsing prpr2.bean:
+
+Okay
+
+******************************************   Parsing prpr3.bean:
+
+Okay
+
+******************************************   Parsing prpr4.bean:
+
+Okay
+
+******************************************   Parsing prpr5.bean:
+
+Mismatch:
+1,43c1
+< 
+< proc main()
+<     bool x;
+< 
+<     x := false;
+<     p(x, x);
+<     if x then
+<         if x then
+<             p(x, x);
+<             if x then
+<                 p(x, x);
+<             else
+<                 p(x, x);
+<             fi
+<         else
+<             if x then
+<                 p(x, x);
+<             else
+<                 while x do
+<                     p(x, x);
+<                     p(x, x);
+<                 od
+<                 p(x, x);
+<             fi
+<             p(x, x);
+<         fi
+<     else
+<         while x do
+<             p(x, x);
+<             p(x, x);
+<         od
+<         if x then
+<             p(x, x);
+<         else
+<             p(x, x);
+<         fi
+<     fi
+< end
+< 
+< proc p(val int u, val int v)
+< 
+<     write u + v;
+< end
+---
+> ERROR OCCURRED : line 6 : Parsing error
+
+******************************************   Parsing prpr6.bean:
+
+Okay
+
+******************************************   Parsing bell.bean:
+
+Okay
+
+******************************************   Parsing fib.bean:
+
+Okay
+
+******************************************   Parsing gcd.bean:
+
+Okay
+
+******************************************   Parsing hail.bean:
+
+Okay
+
+******************************************   Parsing power.bean:
+
+Mismatch:
+24c24
+<         if 2 * (n / 2) = n then
+---
+>         if 2 * n / 2 = n then
+
+******************************************   Parsing stddev.bean:
+
+Mismatch:
+1,27c1
+< 
+< proc main()
+<     int x;
+<     int sum;
+<     int sumsq;
+<     int mean;
+<     int count;
+<     int done;
+< 
+<     write "Type a list of integers, ending with a negative number\n";
+<     read x;
+<     done := x < 0;
+<     while not done do
+<         count := count + 1;
+<         sum := sum + x;
+<         sumsq := sumsq + x * x;
+<         read x;
+<         done := x < 0;
+<     od
+<     mean := sum / count;
+<     write "The mean is ";
+<     write mean;
+<     write "\n";
+<     write "The variance is ";
+<     write sumsq / count - mean * mean;
+<     write "\n";
+< end
+---
+> ERROR OCCURRED : line 18 : Parsing error
+
+******************************************   Parsing strange.bean:
+
+Mismatch:
+1c1
+< typedef {fA : int, fB : {gA : bool, fB : bool}} a_record
+---
+> typedef {fA : int, fB : {gA : boolfB : bool}} a_record
+
+******************************************   Parsing lex11.bad.bean:
+proc main()
+int x;
+  x := @ ;
+end
+Result:
+ERROR OCCURRED : line 3 : Parsing error 
+
+******************************************   Parsing lex12.bad.bean:
+proc main()
+int x;
+int xyz_ab$;
+bool z;
+    x := 3;
+    z := true;
+    write z;
+end
+Result:
+
+proc main()
+    int x;
+    int xyz_ab;
+    bool z;
+
+    x := 3;
+    z := true;
+    write z;
+end
+
+******************************************   Parsing lex13.bad.bean:
+proc main()
+    int int; int := 0;
+end
+Result:
+ERROR OCCURRED : line 2 : Parsing error 
+
+******************************************   Parsing syn12.bad.bean:
+proc main ()
+    bool test; 
+end
+
+proc fib(int val n, ref int ref out)
+    int f1;
+    int f2;
+
+    out := n;
+}
+
+Result:
+ERROR OCCURRED : line 3 : Parsing error 
+
+******************************************   Parsing syn13.bad.bean:
+proc main()
+int x;
+int y;
+# Sequence of statements cannot be empty
+end
+
+Result:
+ERROR OCCURRED : line 5 : Parsing error 
+
+******************************************   Parsing syn14.bad.bean:
+proc main()
+int m;
+int n;
+    read n;
+    while n>1 do
+        m := ( n;
+        while m := m do
+            if then
+                n := n - 1;
+                m := m - 1
+                if true then m := m - 1; else n := 6*n + 4;
+                fi
+             fi
+        od
+    od
+end
+Result:
+ERROR OCCURRED : line 6 : Parsing error 
+
+******************************************   Parsing syn15.bad.bean:
+proc main()
+    int x; x := 0; x := 1
+end
+Result:
+ERROR OCCURRED : line 3 : Parsing error 
+
+******************************************   Parsing syn16.bad.bean:
+proc main()
+typedef {b: int} t
+
+t a;
+    t.b := 0;
+end
+Result:
+ERROR OCCURRED : line 2 : Parsing error 
+
+******************************************   Parsing syn17.bad.bean:
+proc main()
+int n;
+    n := 0;
+end
+    n := 1;
+Result:
+ERROR OCCURRED : line 5 : Parsing error 
+
+******************************************   Parsing syn18.bad.bean:
+proc main()
+int m;
+int n;
+    read m;
+    write if m=n then
+end
+Result:
+ERROR OCCURRED : line 5 : Parsing error 
+
+******************************************   Parsing syn19.bad.bean:
+proc main(val int a, ref)
+int m; read m;
+end
+Result:
+ERROR OCCURRED : line 1 : Parsing error 
+
+
+--- End of testing for nianbow ---\n
+
+============================================
+src/parser.mly
+16:55:14_Monday_11_April_2016
+============================================
+/* File parser.mly */
+%{
+open Ast
+%}
+%token <bool> BOOL_CONST
+%token <int> INT_CONST
+%token <string> STRING_CONST
+%token <string> IDENT
+%token BOOL INT
+%token WRITE READ
+%token ASSIGN
+%token LPAREN RPAREN
+
+%token <char> UNKNOW
+%token PLUS MINUS MUL DIV
+%token SEMICOLON COMMA STRUCTKEY
+
+%token WHILE DO OD
+%token IF THEN FI ELSE
+
+%token OR AND NOT EQUAL BIGGER SMALLER NOEQUAL NOBIGGER NOSMALLER
+%token INT BOOL
+
+%token LBRACKET RBRACKET
+
+%token PROC END COLON DOT 
+
+%token VAL REF
+
+%token EOF
+
+%left OR
+%left AND
+%nonassoc NOT
+%nonassoc EQUAL NOEQUAL SMALLER NOBIGGER BIGGER NOSMALLER
+%left PLUS MINUS        /* lowest precedence */
+%left MUL DIV         /* medium precedence */
+
+
+%start main             /* the entry point */
+%type <Ast.program> main
+%%
+main:
+	typedefs procs { {typedefs = List.rev $1; procs = List.rev $2} }    /*   ----------------   here should be rev  */
+;
+
+unMatch:
+ UNKNOW {}
+/*---------Typedef------*/
+	
+typedefs:
+	/*multiple structs*/
+	| typedefs typedef  { $2::$1 }					/*   ----------------   change */
+	/*single struct*/
+	| typedef {$1 :: []}
+	| { [] }
+
+typedef:
+	/*single struct*/
+	| STRUCTKEY LBRACKET statements RBRACKET IDENT { Typedef ($3,$5) }
+	| STRUCTKEY beanType IDENT { TypedefBeanType ($2,$3) }
+	| STRUCTKEY IDENT IDENT { TypedefIdent ($2,$3) }
+
+				
+				
+
+statement:
+	| IDENT COLON IDENT          	 { Highstmt ($1, $3) }	
+	| IDENT COLON basictype          { Primitivestmt ($1, $3) }
+	| IDENT COLON innertypedef       { Blockstmt ($1, $3) }
+
+statements:
+	| statement COMMA statements { $1::$3 }
+	| statement {$1::[]}
+	| { [] }
+
+basictype:
+	| INT {Int}
+	| BOOL {Bool}
+
+innertypedef:
+			/*STRUCTKEY { expr } r_record*/
+  | LBRACKET statements RBRACKET { $2 }
+;
+
+/*------------PROCEDURE DEFINE*/
+
+procName:
+	| IDENT	{$1}
+
+lvalue:
+	| IDENT { LId($1) }
+	| IDENT DOT lvalue { LField($1,$3) }
+
+
+beanType:
+	| INT	{Int}
+	| BOOL	{Bool}
+
+varD:
+	|VAL { Val }
+
+refD:
+	|REF { Ref }
+
+varName:
+	| IDENT { $1 }
+
+
+
+alExpr:
+  | INT_CONST { Eint $1 }
+  | lvalue { ElvalInAlExpr $1 }
+  /* Binary operators */
+  | alExpr PLUS alExpr { Ebinop ($1, Op_add, $3) }
+  | alExpr MINUS alExpr { Ebinop ($1, Op_sub, $3) }
+  | alExpr MUL alExpr { Ebinop ($1, Op_mul, $3) }
+  | alExpr DIV alExpr { Ebinop ($1, Op_div, $3) }	
+  | MINUS alExpr { EunopInAlExpr ( Op_minus, $2) }
+  | LPAREN alExpr RPAREN { $2 }
+
+
+
+logicExpr:
+	| BOOL_CONST { Ebool ($1) }
+    | lvalue { ElvalInLogicExpr($1) }
+
+	| logicExpr OR logicExpr { Ebinop4 ($1, Op_or, $3) }
+	| logicExpr AND logicExpr { Ebinop4 ($1, Op_and, $3) }
+	| NOT logicExpr { EunopInLogicExpr ( Op_not, $2) }
+
+
+  	| alExpr EQUAL alExpr { Ebinop1 ($1, Op_eq, $3) }
+  	| alExpr NOEQUAL alExpr { Ebinop1 ($1, Op_not_eq, $3) }
+
+  	| alExpr EQUAL logicExpr { Ebinop2 ($1, Op_eq, $3) }
+  	| alExpr NOEQUAL logicExpr { Ebinop2 ($1, Op_not_eq, $3) }
+
+   	| logicExpr EQUAL alExpr { Ebinop3 ($1, Op_eq, $3) }
+  	| logicExpr NOEQUAL alExpr { Ebinop3 ($1, Op_not_eq, $3) }
+
+  	| logicExpr EQUAL logicExpr { Ebinop4 ($1, Op_eq, $3) }
+  	| logicExpr NOEQUAL logicExpr { Ebinop4 ($1, Op_not_eq, $3) }
+
+  	| alExpr SMALLER alExpr { Ebinop1 ($1, Op_small_than, $3) }
+  	| alExpr NOBIGGER alExpr { Ebinop1 ($1, Op_small_and_eq, $3) }
+  	| alExpr BIGGER alExpr { Ebinop1 ($1, Op_large, $3) }
+  	| alExpr NOSMALLER alExpr { Ebinop1 ($1, Op_large_and_eq, $3) }
+
+
+    | LPAREN logicExpr RPAREN { $2 }
+
+
+
+fieldInitializer:
+	| IDENT EQUAL rvalue { FieldInitializerForm($1,$3) }
+
+fieldInitializers:
+	| fieldInitializer COMMA fieldInitializers {$1::$3}
+	| fieldInitializer {$1::[]}
+	| {[]}
+
+structure:
+	| LBRACKET fieldInitializers RBRACKET	{ FieldInitializers($2) }
+
+rvalue:
+	| logicExpr {LogicexprInRvalue($1)}
+	| alExpr {AlexprInRvalue($1)}
+	| structure {Structure($1)}
+
+expr:
+	| logicExpr {LogicexprInExpr($1)}
+	| alExpr {AlexprInExpr($1)}
+	| lvalue {LvalueInExpr $1}
+
+exprList:
+	| exprList COMMA expr { $3 :: $1 }
+	| expr { $1 :: [] }
+	| { [] }
+
+
+stmt:
+	| lvalue ASSIGN rvalue SEMICOLON { Assign($1,$3) }
+	| READ IDENT SEMICOLON {ReadExpre $2}
+	| WRITE STRING_CONST SEMICOLON {WriteExpre $2}
+	| WRITE expr SEMICOLON {WriteVar $2}
+	| IDENT LPAREN exprList RPAREN SEMICOLON {ExprList($1,List.rev $3)}
+
+	| IF logicExpr THEN stmts FI {IfExpre($2,List.rev $4)}
+	| IF logicExpr THEN stmts ELSE stmts FI {IfElseExpre ($2,List.rev $4,List.rev $6)}
+	| WHILE logicExpr DO stmts OD {WhileExpre($2,List.rev $4)}
+
+
+
+stmts:
+	| stmts stmt { $2 :: $1 }
+	| stmt { $1 :: [] }
+
+
+localVarDecl:
+	| beanType varName SEMICOLON { ValTypeDecl($1,$2) }
+	| varName varName SEMICOLON { RefTypeDecl($1,$2) }
+
+
+localVarDecls:
+	| localVarDecls localVarDecl { $2 :: $1 }
+	| localVarDecl { $1 :: [] }
+	| { [] }
+
+procBody:
+	| stmts { { localVarDecls = []; stmts = List.rev $1 } }
+	| localVarDecls stmts { { localVarDecls = List.rev $1; stmts =  List.rev $2 } }
+
+
+
+paremeter:
+	| varD beanType varName 	{ValP($1,$2,$3)}
+	| refD varName varName 	{RefP($1,$2,$3)}
+	| varD varName varName	{ValBeanP($1,$2,$3)}
+	| refD beanType varName 	{RefBeanP($1,$2,$3)}
+
+
+
+paremeters:
+	| paremeter COMMA paremeters { $1 :: $3 }
+	| paremeter { $1 :: [] }
+	| { [] }
+
+procHeader:
+	| procName LPAREN paremeters RPAREN { ProcHeader($1,$3) }
+
+
+proc:
+	| PROC procHeader procBody END	{ Proc ($2 ,$3 ) }
+
+
+procs:
+	| procs proc { $2 :: $1 }
+	| proc { $1 :: [] }
+	| { [] } 
+============================================
+src/ast.ml
+16:55:14_Monday_11_April_2016
+============================================
+
+
+type procName = string
+
+type varName = string
+type stringExpre = string
+type refType = string
+
+type ident = string
+
+
+type beanType = 
+  | Bool
+  | Int
+
+
+type hightype = string
+(*type define 
+stmt->typeStmt
+varident->varName
+lowtype->beanType
+typeident->varName
+*)
+
+
+type typeStmt =
+	| Primitivestmt of (varName * beanType)
+  | Highstmt of (varName * hightype)
+	| Blockstmt of (varName * block)
+and block = typeStmt list
+
+type typedefform = 
+	| Typedef of (typeStmt list * varName)
+	| TypedefBeanType of (beanType * varName)
+	| TypedefIdent of (varName * varName)
+
+
+type format = typedefform list 
+
+(*procedure defin*)
+
+type lvalue =
+  | LId of varName
+  | LField of ( varName * lvalue )
+
+type varD = Val
+type refD = Ref
+
+type parameter = 
+  | ValP of (varD * beanType * varName)
+  | RefP of (refD * refType * varName)
+  | ValBeanP of (varD * refType * varName)
+  | RefBeanP of (refD * beanType * varName)
+
+
+type parameters = parameter list
+
+type procHeader = ProcHeader of ( procName * parameters ) 
+
+type binop =
+  | Op_or
+  | Op_and
+  | Op_eq
+  | Op_not_eq
+  | Op_small_than
+  | Op_small_and_eq
+  | Op_large
+  | Op_large_and_eq
+  | Op_add 
+  | Op_sub 
+  | Op_mul 
+  | Op_div
+
+type unop =
+  | Op_not
+  | Op_minus
+
+type alExpr =
+  | Eint of int
+  | ElvalInAlExpr of lvalue
+  | Ebinop of (alExpr * binop * alExpr)
+  | EunopInAlExpr of (unop * alExpr)
+
+type logicExpr = 
+  | Ebool of bool
+  | ElvalInLogicExpr of lvalue
+  | Ebinop1 of (alExpr * binop * alExpr)
+  | Ebinop2 of (alExpr * binop * logicExpr)
+  | Ebinop3 of (logicExpr * binop * alExpr)
+  | Ebinop4 of (logicExpr * binop * logicExpr)
+  | EunopInLogicExpr of (unop * logicExpr)
+
+
+type rvalue =
+  | LogicexprInRvalue of logicExpr 
+  | AlexprInRvalue of alExpr
+  | Structure of structure
+and fieldInitializer = 
+  | FieldInitializerForm of ( ident * rvalue )
+and structure = 
+  | FieldInitializers of fieldInitializer list
+
+
+type expr = 
+  | LogicexprInExpr of logicExpr 
+  | AlexprInExpr of alExpr
+  | LvalueInExpr of lvalue
+
+
+type exprList = expr list
+
+
+type stmt = 
+  | Assign of (lvalue * rvalue)
+  | ReadExpre of (varName)
+  | WriteExpre of (stringExpre)
+  | WriteVar of (expr)
+  | ExprList of (ident * exprList)
+  | IfExpre of ( logicExpr * ifStmts)
+  | IfElseExpre of (logicExpr * ifStmts * elseStmts)
+  | WhileExpre of (logicExpr * iwStmts)
+ and
+ iwStmts = stmt list	
+ and
+ ifStmts = stmt list
+ and
+ elseStmts = stmt list
+
+type localVarDecl = 
+  | ValTypeDecl of (beanType * varName)
+  | RefTypeDecl of (refType * varName)
+
+
+
+type procBody = {
+
+  localVarDecls: localVarDecl list;
+  stmts: stmt list
+
+}
+
+
+type proc = Proc of ( procHeader * procBody )
+
+type program = {
+  typedefs: typedefform list;
+  procs : proc list
+}
+ 
+============================================
+src/bean.ml
+16:55:14_Monday_11_April_2016
+============================================
+module P = Parser
+module L = Lexer
+module PPT = Pprint
+(* Argument parsing code *)
+(* Argument parsing code *)
+let infile_name = ref None
+
+type compiler_mode = PrettyPrint | Compile | Error
+let mode = ref Error
+
+(* --------------------------------------------- *)
+(*  Specification for command-line options       *)
+(* --------------------------------------------- *)
+    
+let (speclist:(Arg.key * Arg.spec * Arg.doc) list) =
+  ["-p",
+     Arg.Unit(fun () -> mode := PrettyPrint),
+     " Run the compiler in pretty-printer mode";
+    ]
+
+let main () =
+  (* Parse the command-line arguments *)
+  
+  Arg.parse speclist
+      (begin fun fname -> infile_name := Some fname end)
+      "bean [-p] [bean source]" ;
+      
+  if !mode == Error 
+  then print_string "Sorry, cannot generate code yet\n"
+  else begin      
+    (* Open the input file *)
+    let infile = match !infile_name with
+    | None -> stdin
+    | Some fname -> open_in fname in
+    (* Initialize lexing buffer *)
+    let lexbuf = Lexing.from_channel infile in
+    let tokens_queue = Queue.create() in
+    (* Call the parser *)
+    let quit_loop = ref false in
+    while not !quit_loop do
+      let line_number,token = L.token lexbuf in
+      if token == P.EOF then
+        quit_loop := true
+      else
+        Queue.add (line_number,token) tokens_queue
+    done;
+    
+    let lexbuf = Lexing.from_string "" in
+    let last_line_number = ref 1 in
+    let lexer_token lb = 
+      if Queue.is_empty tokens_queue then
+        P.EOF
+      else begin
+        let ln, next_token = Queue.take tokens_queue in
+        last_line_number := ln;
+        next_token
+      end
+    in 
+    let ast = 
+      try 
+        P.main lexer_token lexbuf
+      with e -> begin
+        Printf.printf "ERROR OCCURRED : line %d : Parsing error \n" !last_line_number;
+        exit 0
+      end
+    in
+    match !mode with
+      | PrettyPrint -> print_string (PPT.print_program Format.std_formatter ast)
+      | Compile -> print_string "Compile"
+      | _ -> print_string "Unexpected"
+  end
+let _ = main ()
+
+
+============================================
+src/pprint.ml
+16:55:14_Monday_11_April_2016
+============================================
+open Ast
+open Format
+open Printf
+open Str
+
+let get_4spaces = "    "
+
+let rec get_typeStmt stmt =
+	match stmt with
+	| Primitivestmt(varident, Bool) -> String.concat "" [varident; " : "; "bool"]
+	| Primitivestmt(varident, Int) -> String.concat "" [varident; " : "; "int"]
+	| Highstmt(varident, customtype) -> String.concat "" [varident; " : "; customtype]
+	| Blockstmt(varident, block) -> String.concat "" [varident; " : "; "{"; (analysis block); "}"] 
+and analysis block =
+	match block with
+	| [] -> ""
+	| x::tail -> String.concat "" [get_typeStmt x; analysis tail]
+
+
+let rec get_typeStmts stmts=
+	match stmts with
+	| [] -> ""
+	| x::tail -> if List.length stmts > 1 then String.concat "" [(get_typeStmt x) ;", " ;(get_typeStmts tail)]
+											else get_typeStmt x
+
+let get_typeBlock typeblock = 
+	match typeblock with
+	| Typedef(stmts,typeident) -> String.concat "" ["typedef ";"{";(get_typeStmts stmts);"} ";typeident] (*list of stmt*)
+	| TypedefBeanType(Bool,ident) -> String.concat "" ["typedef bool ";ident] (*list of stmt*)
+	| TypedefBeanType(Int,ident) -> String.concat "" ["typedef int ";ident] (*list of stmt*)
+	| TypedefIdent(ident,ident2) -> String.concat "" ["typedef "; ident ;" ";ident2] (*list of stmt*)
+	
+	
+(*format is typdef list*)
+
+
+
+let get_bean_type beanType= 
+	match beanType with
+	| Bool -> String.concat "" ["bool"]
+	| Int -> String.concat "" ["int"]
+
+let get_parameter parameter= 
+	match parameter with
+  	| ValP(varD , beanType , varName) -> String.concat "" ["val "; (get_bean_type beanType) ;" ";  varName]
+  	| RefP(refD , refType , varName) -> String.concat "" ["ref "; refType;" "; varName]
+   	| ValBeanP(varD , refType , varName) -> String.concat "" ["val "; refType;" "; varName]
+  	| RefBeanP(refD , beanType , varName) -> String.concat "" ["ref "; (get_bean_type beanType);" "; varName]
+
+
+let rec get_parameters parameters = 
+	match parameters with
+	| [] -> ""
+	| x::[] -> String.concat "" [(get_parameter x)]
+	| x::tail -> if List.length parameters > 1 then String.concat "" [(get_parameter x) ; ", " ;(get_parameters tail)]
+												else get_parameter x
+
+
+let get_proc_header procHeader = 
+	match procHeader with
+	| ProcHeader( procName , parameters ) -> String.concat "" [procName;"(";(get_parameters parameters);")"]
+
+
+
+let rec get_lvalue lvalue = 
+	match lvalue with
+	| LId(ident) -> String.concat "" [ident]
+	| LField(ident,lvalue) -> String.concat "" [ident;".";(get_lvalue lvalue)]
+
+
+
+
+let rec get_alExpr expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| ElvalInAlExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" [(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2)]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2)]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" / ";(get_expr_pre_is_div expr2)]
+	| EunopInAlExpr ( Op_minus, expr2) -> String.concat "" ["-";(get_expr_pre_is_div expr2)]
+	| _ -> String.concat "" [] 
+and get_expr_followed_is_plus expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| ElvalInAlExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" [(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2)]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2)]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2)]
+	| EunopInAlExpr ( Op_minus, expr2) -> String.concat "" ["-";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_followed_is_sub expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| ElvalInAlExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" [(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2)]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2)]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2);]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2);]
+	| EunopInAlExpr ( Op_minus, expr2) -> String.concat "" ["-";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_followed_is_mul expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| ElvalInAlExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2)]
+	| EunopInAlExpr ( Op_minus, expr2) -> String.concat "" ["-";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_followed_is_div expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| ElvalInAlExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2)]
+	| EunopInAlExpr ( Op_minus, expr2) -> String.concat "" ["-";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_pre_is_plus expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| ElvalInAlExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" [(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2)]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2)]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_div expr1);" / ";(get_expr_pre_is_div expr2)]
+	| EunopInAlExpr ( Op_minus, expr2) -> String.concat "" ["-";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_pre_is_sub expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| ElvalInAlExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" / ";(get_expr_pre_is_div expr2)]
+	| EunopInAlExpr ( Op_minus, expr2) -> String.concat "" ["-";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_pre_is_mul expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| ElvalInAlExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" / ";(get_expr_pre_is_div expr2)]
+	| EunopInAlExpr ( Op_minus, expr2) -> String.concat "" ["-";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_pre_is_div expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| ElvalInAlExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" ["(";(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2);")"]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2);")"]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" ["(";(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2);")"]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" ["(";(get_expr_followed_is_sub expr1);" / ";(get_expr_pre_is_div expr2);")"]
+	| EunopInAlExpr ( Op_minus, expr2) -> String.concat "" ["-";(get_expr_pre_is_div expr2)]
+
+	| _ -> String.concat "" []
+and get_expr_pre_is_minus expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| ElvalInAlExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+	| _ -> String.concat "" ["(";(get_alExpr expr);")"] 
+
+
+
+
+
+let rec get_logicExpr expr = 
+	match expr with
+	| Ebool(boolVal) -> String.concat "" [(string_of_bool boolVal)]
+	| ElvalInLogicExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+
+	| Ebinop4 (expr1,Op_or,expr2) -> String.concat "" [(get_logicExpr expr1);" or ";(get_logicExpr expr2)]
+	| Ebinop4 (expr1,Op_and,expr2) -> String.concat "" [(get_pre_or_followed_is_and expr1);" and ";(get_pre_or_followed_is_and expr2)]
+
+	| EunopInLogicExpr (Op_not,expr2) -> String.concat "" [" not ";(get_logicExpr expr2)]
+
+
+	| Ebinop1 (expr1,Op_eq,expr2) -> String.concat "" [(get_followed_is_relation_with_al expr1);" = ";(get_pre_is_relation_with_al expr2)]
+	| Ebinop1 (expr1,Op_not_eq,expr2) -> String.concat "" [(get_followed_is_relation_with_al expr1);" != ";(get_pre_is_relation_with_al expr2)]
+
+	| Ebinop2 (expr1,Op_eq,expr2) -> String.concat "" [(get_followed_is_relation_with_al expr1);"  = ";(get_pre_is_relation expr2)]
+	| Ebinop2 (expr1,Op_not_eq,expr2) -> String.concat "" [(get_followed_is_relation_with_al expr1);" != ";(get_pre_is_relation expr2)]
+
+	| Ebinop3 (expr1,Op_eq,expr2) -> String.concat "" [(get_followed_is_relation expr1);"  = ";(get_pre_is_relation_with_al expr2)]
+	| Ebinop3 (expr1,Op_not_eq,expr2) -> String.concat "" [(get_followed_is_relation expr1);" != ";(get_pre_is_relation_with_al expr2)]
+
+	| Ebinop4 (expr1,Op_eq,expr2) -> String.concat "" [(get_followed_is_relation expr1);"  = ";(get_pre_is_relation expr2)]
+	| Ebinop4 (expr1,Op_not_eq,expr2) -> String.concat "" [(get_followed_is_relation expr1);" != ";(get_pre_is_relation expr2)]
+
+
+
+	| Ebinop1 (expr1,Op_small_than,expr2) -> String.concat "" [(get_followed_is_relation_with_al expr1);" < ";(get_pre_is_relation_with_al expr2)]
+	| Ebinop1 (expr1,Op_small_and_eq,expr2) -> String.concat "" [(get_followed_is_relation_with_al expr1);" <= ";(get_pre_is_relation_with_al expr2)]
+	| Ebinop1 (expr1,Op_large,expr2) -> String.concat "" [(get_followed_is_relation_with_al expr1);" > ";(get_pre_is_relation_with_al expr2)]
+	| Ebinop1 (expr1,Op_large_and_eq,expr2) -> String.concat "" [(get_followed_is_relation_with_al expr1);" >= ";(get_pre_is_relation_with_al expr2)]
+
+	| _ -> String.concat "" [] 
+and get_pre_or_followed_is_and expr = 
+	match expr with
+	| Ebool(boolVal) -> String.concat "" [(string_of_bool boolVal)]
+	| ElvalInLogicExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+
+	| Ebinop4 (expr1,Op_eq,expr2) -> String.concat "" ["(";(get_logicExpr expr1);" or ";(get_logicExpr expr2);")"]
+	| _ -> String.concat "" [(get_logicExpr expr)] 
+
+and get_followed_is_relation expr = 
+	match expr with
+	| Ebool(boolVal) -> String.concat "" [(string_of_bool boolVal)]
+	| ElvalInLogicExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+
+	| Ebinop4 (expr1,Op_eq,expr2) -> String.concat "" ["(";(get_logicExpr expr1);" or ";(get_logicExpr expr2);")"]
+	| Ebinop4 (expr1,Op_not_eq,expr2) -> String.concat "" ["(";(get_pre_or_followed_is_and expr1);" and ";(get_pre_or_followed_is_and expr2);")"]
+	| EunopInLogicExpr (Op_not,expr2) -> String.concat "" ["( not ";(get_logicExpr expr2);")"]
+	| _ -> String.concat "" [(get_logicExpr expr)] 
+and get_followed_is_relation_with_al expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| ElvalInAlExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" [(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2)]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2)]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" / ";(get_expr_pre_is_div expr2)]
+	| _ -> String.concat "" [] 
+and get_pre_is_relation_with_al expr = 
+	match expr with
+	| Eint(intVal) -> String.concat "" [(string_of_int intVal)]
+	| ElvalInAlExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+
+	| Ebinop (expr1,Op_add,expr2) -> String.concat "" [(get_expr_followed_is_plus expr1);" + ";(get_expr_pre_is_plus expr2)]
+	| Ebinop (expr1,Op_sub,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" - ";(get_expr_pre_is_sub expr2)]
+	| Ebinop (expr1,Op_mul,expr2) -> String.concat "" [(get_expr_followed_is_mul expr1);" * ";(get_expr_pre_is_mul expr2)]
+	| Ebinop (expr1,Op_div,expr2) -> String.concat "" [(get_expr_followed_is_sub expr1);" / ";(get_expr_pre_is_div expr2)]
+	| _ -> String.concat "" [] 
+and get_pre_is_relation expr = 
+	match expr with
+	| Ebool(boolVal) -> String.concat "" [(string_of_bool boolVal)]
+	| ElvalInLogicExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+
+	| _ -> String.concat "" ["(";(get_logicExpr expr);")"] 
+
+and get_pre_is_not expr = 
+	match expr with
+	| Ebool(boolVal) -> String.concat "" [(string_of_bool boolVal)]
+	| ElvalInLogicExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+
+	| Ebinop4 (expr1,Op_eq,expr2) -> String.concat "" ["(";(get_logicExpr expr1);" or ";(get_logicExpr expr2);")"]
+	| Ebinop4 (expr1,Op_not_eq,expr2) -> String.concat "" ["(";(get_pre_or_followed_is_and expr1);" and ";(get_pre_or_followed_is_and expr2);")"]
+	| EunopInLogicExpr (Op_not,expr2) -> String.concat "" ["( not ";(get_logicExpr expr2);")"]
+	| _ -> String.concat "" [(get_logicExpr expr)]
+
+
+
+let rec get_fieldInitializer fieldInitializer = 
+	match fieldInitializer with
+	| FieldInitializerForm(ident,rvalue) -> String.concat "" [ident;" = ";(get_rvalue rvalue);""]
+and get_fieldInitializers fieldInitializers = 
+	match fieldInitializers with
+	| [] -> ""
+	| x::[] -> String.concat "" [(get_fieldInitializer x)]
+	| x::tail -> String.concat "" [(get_fieldInitializer x);", ";(get_fieldInitializers tail);]
+and get_structure fieldInitializers = 
+	match fieldInitializers with
+	| FieldInitializers(fieldInitializers) -> String.concat "" ["{";(get_fieldInitializers fieldInitializers);"}"]
+and get_rvalue rvalue = 
+	match rvalue with
+	| LogicexprInRvalue(logicExpr) -> String.concat "" [(get_logicExpr logicExpr)]
+	| AlexprInRvalue(alExpr) -> String.concat "" [(get_alExpr alExpr)]
+
+	| Structure(structure) -> String.concat "" [(get_structure structure)]
+
+(*
+let get_stmt stmt = 
+	match stmt with
+	| Assign(lvalue,rvalue) -> String.concat "" [(get_lvalue lvalue);" := ";(get_rvalue rvalue);";\n"]
+*)
+
+let get_expr expr = 
+	match expr with
+	| LogicexprInExpr(logicExpr) -> String.concat "" [(get_logicExpr logicExpr)]
+	| AlexprInExpr(alExpr) -> String.concat "" [(get_alExpr alExpr)]
+	| LvalueInExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
+
+
+let rec get_expList exprList= 
+	match exprList with
+	| [] -> ""
+	| x::[] -> String.concat "" [(get_expr x)]
+	| x::tail -> String.concat "" [(get_expr x);", ";(get_expList tail)]
+
+
+
+let add4Spaces  str =    String.concat "\n    "  [""; String.concat "\n    " ( Str.split (Str.regexp "\n") str )]
+
+
+let rec get_stmts stmts = 
+	match stmts with
+	| [] -> ""
+	| x::[] -> String.concat "" [(get_stmt x);]
+	| x::tail -> String.concat "\n" [(get_stmt x);(get_stmts tail);]
+		and  get_stmt x =
+					 match x with
+					 | Assign(lvalue,rvalue) -> String.concat "" [get_4spaces;(get_lvalue lvalue);" := ";(get_rvalue rvalue);";"]
+					 | ReadExpre (varName) ->  String.concat "" [get_4spaces;"read "; varName; ";"]
+					 | WriteExpre (stringExpre) ->  String.concat "" [get_4spaces;"write "; stringExpre; ";"]
+					 | WriteVar  (expr)  ->  String.concat "" [get_4spaces;"write "; get_expr expr; ";"]
+					 | ExprList(ident,exprList) -> String.concat "" [get_4spaces;ident;"("; get_expList exprList; ")";";"]
+					 | IfExpre (logicExpr,ifStmts)  ->  String.concat "" [get_4spaces;"if ";(get_logicExpr logicExpr);" then";add4Spaces(get_stmts ifStmts); "\n    fi"]
+					 | IfElseExpre (logicExpr,ifElseIfStmts, ifElseElseStmts) -> String.concat "" [get_4spaces;"if ";(get_logicExpr logicExpr);" then"; ( add4Spaces(get_stmts ifElseIfStmts)); "\n    else";  add4Spaces(get_stmts ifElseElseStmts); "\n    fi"]
+					 | WhileExpre (logicExpr,whileStmts) ->  String.concat "" [get_4spaces;"while ";(get_logicExpr logicExpr);" do"; add4Spaces(get_stmts whileStmts); "\n    od"]
+
+
+let get_localVarDecl localVarDecl = 
+	match localVarDecl with
+	| ValTypeDecl(beanType,varName) -> String.concat "" [get_4spaces;(get_bean_type beanType);" ";varName;";\n"]
+	| RefTypeDecl(refType,varName) -> String.concat "" [get_4spaces;refType;" ";varName;";\n"]
+
+
+let rec get_localVarDecls localVarDecls = 
+	match localVarDecls with
+	| [] -> ""
+	| x::[] -> String.concat "" [(get_localVarDecl x)]
+	| x::tail -> String.concat "" [(get_localVarDecl x);(get_localVarDecls tail)]
+
+
+let rec get_proc_body procBody = 
+	match procBody with
+	| { localVarDecls = localVarDecls; stmts = stmts } -> String.concat "" [(get_localVarDecls localVarDecls);"\n";(get_stmts stmts)]
+
+
+let get_proc proc = 
+	match proc with
+	| Proc( procHeader , procBody ) -> String.concat "" ["\nproc ";(get_proc_header procHeader);"\n";(get_proc_body procBody);"\nend"]
+
+let rec get_procs procs = 
+	match procs with
+	| [] -> ""
+	| x::tail -> String.concat "" [(get_proc x) ; "\n" ;(get_procs tail)]
+	
+let rec print_typeDef format = 
+	match format with
+	| [] -> ""
+	| x::tail -> String.concat "" [(get_typeBlock x); "\n";(print_typeDef tail)] (*single typedef*)
+
+
+	
+let print_program fmt prog = 
+	match prog with
+	| {typedefs = typedefs ; procs = procs} -> String.concat "" [(print_typeDef typedefs);(get_procs procs)]
+	============================================
+src/Makefile.depend
+16:55:14_Monday_11_April_2016
+============================================
+bean.cmo :
+bean.cmx :
+ast.cmi :
+parser.cmi : ast.cmi
+pprint.cmi :
+ast.cmo : ast.cmi
+ast.cmx : ast.cmi
+lexer.cmo : parser.cmi
+lexer.cmx : parser.cmx
+parser.cmo : ast.cmi parser.cmi
+parser.cmx : ast.cmx parser.cmi
+pprint.cmo : pprint.cmi
+pprint.cmx : pprint.cmi
+bean.cmo :
+bean.cmx :============================================
+src/Makefile
+16:55:14_Monday_11_April_2016
+============================================
+TARGETS = bean
+TARGETS_BYTE=$(TARGETS:%=%.byte)
+
+MODULES = ast lexer parser pprint
+MLFILES = $(addsuffix .ml, $(MODULES))
+CMOFILES = $(addsuffix .cmo, $(MODULES))
+CMXFILES = $(addsuffix .cmx, $(MODULES))
+
+ALLMODULES = $(MODULES) bean
+
+OCAMLLEX = ocamllex
+OCAMLYACC = ocamlyacc
+OCAMLDEP = ocamldep
+
+OCAMLFLAGS =
+
+all : clean opt byte
+byte: $(TARGETS_BYTE)
+opt: $(TARGETS)
+
+%.cmi: %.mli
+	ocamlc $(OCAMLFLAGS) -c $<
+
+%.cmo: %.ml
+	ocamlc $(OCAMLFLAGS) -g -c $<
+
+%.cmx: %.ml
+	ocamlopt $(OCAMLOPTFLAGS) -g -c $<
+
+%.ml: %.mll
+	$(OCAMLLEX) $^
+
+%.ml %.mli: %.mly
+	$(OCAMLYACC) $^
+
+bean.byte : $(CMOFILES) bean.cmo
+	ocamlc -g -o  $@ str.cma $^
+
+bean :  $(CMXFILES) bean.cmx
+	ocamlopt -g -o $@ str.cmxa $^
+
+clean :
+	rm -f *.cmo *.cmi *.cmx *.o
+	rm -f lexer.ml parser.ml parser.mli
+
+clobber : clean
+	rm -f $(TARGETS) $(TARGETS_BYTE)
+
+.PHONY : clean clobber depend
+
+# include depend
+depend: lexer.ml parser.ml
+	$(OCAMLDEP) bean.ml bean.mli $(ALLMODULES:%=%.mli) $(ALLMODULES:%=%.ml) >Makefile.depend
+
+-include Makefile.depend
+============================================
+src/lexer.mll
+16:55:14_Monday_11_April_2016
+============================================
+(* File lexer.mll *)
+{
+open Parser        (* The type token is defined in parser.mli *)
+
+let line_number = ref 1
+
+exception Eof
+
+
+}
+let digit = ['0' - '9']
+let alpha = ['a' - 'z' 'A' - 'Z']
+let alnum = alpha | digit | '_' | '\''
+let digits = digit+
+let ident = ('_' | alpha ) alnum*
+let structKey = "typedef"
+
+let stringExc = [^'\"' '\t' '\n'] 
+let stringReq = '\"' stringExc * '\"'
+let comment = "#" [^'\n']*
+
+rule token = parse
+  | stringReq as stringArg     { !line_number, STRING_CONST stringArg }
+  | comment { token lexbuf } 
+  | [' ' '\t']    { token lexbuf }     (* skip blanks *)
+  | '\n'          { incr line_number; Lexing.new_line lexbuf ; token lexbuf }
+  | '-'?['0'-'9']+ as lxm {!line_number, INT_CONST(int_of_string lxm) }
+  (* keywords *)
+  | "write"        {!line_number, WRITE }
+  | "read"         {!line_number, READ }
+
+  | "while"        {!line_number, WHILE }
+  | "do"           {!line_number, DO }
+  | "od"           {!line_number, OD }
+  | "if"           {!line_number, IF }
+  | "then"         {!line_number, THEN }
+  | "else"         {!line_number, ELSE }
+  | "fi"           {!line_number, FI } 
+  | "or"           {!line_number, OR }
+  | "and"          {!line_number, AND }
+  | "not"          {!line_number, NOT }
+  | "="            {!line_number, EQUAL }
+  | ":="           {!line_number, ASSIGN }
+  | ">"            {!line_number, BIGGER}
+  | "<"            {!line_number, SMALLER }
+  | "!="           {!line_number, NOEQUAL }
+  | "<="           {!line_number, NOBIGGER }
+  | ">="           {!line_number, NOSMALLER }
+  | '+'            {!line_number, PLUS }
+  | '-'            {!line_number, MINUS }
+  | '*'            {!line_number, MUL }
+  | ';'            {!line_number, SEMICOLON }
+  | ':'			       {!line_number, COLON }
+  | "/"            {!line_number, DIV }
+  | "("            {!line_number, LPAREN }
+  | ")"            {!line_number, RPAREN }
+  | "int"          {!line_number, INT }
+  | "bool"         {!line_number, BOOL }
+  | "true"         {!line_number, BOOL_CONST true }
+  | "false"        {!line_number, BOOL_CONST false }
+  | "proc"         {!line_number, PROC }
+  | "val"          {!line_number, VAL }
+  | "ref"          {!line_number, REF }
+  | "end"          {!line_number, END }
+  | ","            {!line_number, COMMA }
+  | structKey      {!line_number, STRUCTKEY }
+  | "."            {!line_number, DOT }
+  | "{"            {!line_number, LBRACKET }
+  | "}"            {!line_number, RBRACKET }
+  | ident as lxm {!line_number, IDENT lxm }
+  | eof            {!line_number, EOF }
+  | _             { token lexbuf }            
+	
+
+
+
+
+
+
