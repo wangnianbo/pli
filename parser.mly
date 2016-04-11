@@ -184,7 +184,7 @@ stmt:
 	| READ IDENT SEMICOLON {ReadExpre $2}
 	| WRITE STRING_CONST SEMICOLON {WriteExpre $2}
 	| WRITE expr SEMICOLON {WriteVar $2}
-	| IDENT LPAREN exprList RPAREN SEMICOLON {ExprList($1,$3)}
+	| IDENT LPAREN exprList RPAREN SEMICOLON {ExprList($1,List.rev $3)}
 
 	| IF logicExpr THEN stmts FI {IfExpre($2,List.rev $4)}
 	| IF logicExpr THEN stmts ELSE stmts FI {IfElseExpre ($2,List.rev $4,List.rev $6)}

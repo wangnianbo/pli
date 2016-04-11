@@ -15,7 +15,7 @@ let digits = digit+
 let ident = ('_' | alpha ) alnum*
 let structKey = "typedef"
 
-let stringExc = [^'\"'] | [^'\t']
+let stringExc = [^'\"' '\t' '\n'] 
 let stringReq = '\"' stringExc * '\"'
 let comment = "#" [^'\n']*
 
