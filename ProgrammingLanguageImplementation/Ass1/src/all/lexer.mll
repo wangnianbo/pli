@@ -10,9 +10,9 @@ exception Eof
 }
 let digit = ['0' - '9']
 let alpha = ['a' - 'z' 'A' - 'Z']
-let alnum = alpha | digit | '_'
+let alnum = alpha | digit | '_' | '\''
 let digits = digit+
-let ident = ('_' | alpha) alnum*
+let ident = ('_' | alpha ) alnum*
 let structKey = "typedef"
 
 let stringExc = [^'\"'] | [^'\t']

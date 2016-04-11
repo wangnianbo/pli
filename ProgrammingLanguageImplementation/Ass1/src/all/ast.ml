@@ -31,6 +31,9 @@ and block = typeStmt list
 
 type typedefform = 
 	| Typedef of (typeStmt list * varName)
+	| TypedefBeanType of (beanType * varName)
+	| TypedefIdent of (varName * varName)
+
 
 type format = typedefform list 
 
