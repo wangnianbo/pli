@@ -20,7 +20,8 @@ and analysis block =
 let rec get_typeStmts stmts=
 	match stmts with
 	| [] -> ""
-	| x::tail -> String.concat "" [(get_typeStmt x) ;", " ;(get_typeStmts tail)]
+	| x::tail -> if List.length stmts > 1 then String.concat "" [(get_typeStmt x) ;", " ;(get_typeStmts tail)]
+											else get_typeStmt x
 
 let get_typeBlock typeblock = 
 	match typeblock with
@@ -47,7 +48,8 @@ let rec get_parameters parameters =
 	match parameters with
 	| [] -> ""
 	| x::[] -> String.concat "" [(get_parameter x)]
-	| x::tail -> String.concat "" [(get_parameter x) ; ", " ;(get_parameters tail)]
+	| x::tail -> if List.length parameters > 1 then String.concat "" [(get_parameter x) ; ", " ;(get_parameters tail)]
+												else get_parameter x
 
 
 let get_proc_header procHeader = 
@@ -299,7 +301,7 @@ let rec get_expList exprList=
 
 
 
-let add4Spaces  str =    String.concat "\n   "  [""; String.concat "\n   " ( Str.split (Str.regexp "\n") str )]
+let add4Spaces  str =    String.concat "\n    "  [""; String.concat "\n   " ( Str.split (Str.regexp "\n") str )]
 
 
 let rec get_stmts stmts = 
