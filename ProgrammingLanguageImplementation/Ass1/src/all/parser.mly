@@ -47,7 +47,8 @@ main:
 unMatch:
  UNKNOW {}
 /*---------Typedef------*/
-	
+
+ /* load list of type defination */
 typedefs:
 	/*multiple structs*/
 	| typedefs typedef  { $2::$1 }					/*   ----------------   change */
@@ -68,7 +69,8 @@ statement:
 	| IDENT COLON IDENT          	 { Highstmt ($1, $3) }	
 	| IDENT COLON basictype          { Primitivestmt ($1, $3) }
 	| IDENT COLON innertypedef       { Blockstmt ($1, $3) }
-
+	
+ /* load list of type defination statements */
 statements:
 	| statement COMMA statements { $1::$3 }
 	| statement {$1::[]}
@@ -106,8 +108,7 @@ refD:
 varName:
 	| IDENT { $1 }
 
-
-
+ /* load list of algebraic defination */
 alExpr:
   | INT_CONST { Eint $1 }
   | lvalue { ElvalInAlExpr $1 }
@@ -123,7 +124,7 @@ simpleLogicExpr:
 	| lvalue { ElvalInSimpleLogicExpr($1) }
 	| NOT lvalue { EunopInSimpleLogicExpr ( Op_not, $2) }
 
-
+ /* load list of logical defination */
 logicExpr:
 	| BOOL_CONST { Ebool ($1) }
     | lvalue { ElvalInLogicExpr($1) }
@@ -181,7 +182,7 @@ exprList:
 	| expr { $1 :: [] }
 	| { [] }
 
-
+ /* load list of statemant */
 stmt:
 	| lvalue ASSIGN rvalue SEMICOLON { Assign($1,$3) }
 	| READ IDENT SEMICOLON {ReadExpre $2}
@@ -228,7 +229,7 @@ paremeter:
 	| refD beanType varName 	{RefBeanP($1,$2,$3)}
 
 
-
+ /* load list of paremeters */
 paremeters:
 	| paremeter COMMA paremeters { $1 :: $3 }
 	| paremeter { $1 :: [] }

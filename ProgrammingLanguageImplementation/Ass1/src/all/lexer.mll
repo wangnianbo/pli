@@ -8,17 +8,18 @@ exception Eof
 
 
 }
+(* regular expression *)
 let digit = ['0' - '9']
 let alpha = ['a' - 'z' 'A' - 'Z']
 let alnum = alpha | digit | '_' | '\''
 let digits = digit+
 let ident = ('_' | alpha ) alnum*
 let structKey = "typedef"
-
 let stringExc = [^'\"' '\t' '\n'] 
 let stringReq = '\"' stringExc * '\"'
 let comment = "#" [^'\n']*
 
+(* take parse *)
 rule token = parse
   | stringReq as stringArg     {incr line_number; !line_number, STRING_CONST stringArg }
   | comment {incr line_number; token lexbuf } 
@@ -28,7 +29,6 @@ rule token = parse
   (* keywords *)
   | "write"        {!line_number, WRITE }
   | "read"         {!line_number, READ }
-
   | "while"        {!line_number, WHILE }
   | "do"           {!line_number, DO }
   | "od"           {!line_number, OD }
@@ -36,6 +36,7 @@ rule token = parse
   | "then"         {!line_number, THEN }
   | "else"         {!line_number, ELSE }
   | "fi"           {!line_number, FI } 
+  (* logical keywords *)
   | "or"           {!line_number, OR }
   | "and"          {!line_number, AND }
   | "not"          {!line_number, NOT }
@@ -50,7 +51,7 @@ rule token = parse
   | '-'            {!line_number, MINUS }
   | '*'            {!line_number, MUL }
   | ';'            {!line_number, SEMICOLON }
-  | ':'			       {!line_number, COLON }
+  | ':'			   {!line_number, COLON }
   | "/"            {!line_number, DIV }
   | "("            {!line_number, LPAREN }
   | ")"            {!line_number, RPAREN }
@@ -67,13 +68,6 @@ rule token = parse
   | "."            {!line_number, DOT }
   | "{"            {!line_number, LBRACKET }
   | "}"            {!line_number, RBRACKET }
-  | ident as lxm {!line_number, IDENT lxm }
+  | ident as lxm   {!line_number, IDENT lxm }
   | eof            {!line_number, EOF }
-  | _             { token lexbuf }            
-	
-
-
-
-
-
-
+  | _              { token lexbuf }
