@@ -26,7 +26,11 @@ let rec get_typeStmts stmts=
 let get_typeBlock typeblock = 
 	match typeblock with
 	| Typedef(stmts,typeident) -> String.concat "" ["typedef ";"{";(get_typeStmts stmts);"} ";typeident] (*list of stmt*)
-
+	| TypedefBeanType(Bool,ident) -> String.concat "" ["typedef bool ";ident] (*list of stmt*)
+	| TypedefBeanType(Int,ident) -> String.concat "" ["typedef int ";ident] (*list of stmt*)
+	| TypedefIdent(ident,ident2) -> String.concat "" ["typedef "; ident ;" ";ident2] (*list of stmt*)
+	
+	
 (*format is typdef list*)
 
 

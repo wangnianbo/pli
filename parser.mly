@@ -57,8 +57,10 @@ typedefs:
 
 typedef:
 	/*single struct*/
-	STRUCTKEY LBRACKET statements RBRACKET IDENT { Typedef ($3,$5) }
-	
+	| STRUCTKEY LBRACKET statements RBRACKET IDENT { Typedef ($3,$5) }
+	| STRUCTKEY beanType IDENT { TypedefBeanType ($2,$3) }
+	| STRUCTKEY IDENT IDENT { TypedefIdent ($2,$3) }
+
 				
 				
 
@@ -184,9 +186,9 @@ stmt:
 	| WRITE expr SEMICOLON {WriteVar $2}
 	| IDENT LPAREN exprList RPAREN SEMICOLON {ExprList($1,$3)}
 
-	| IF logicExpr THEN stmts FI {IfExpre($2,$4)}
-	| IF logicExpr THEN stmts ELSE stmts FI {IfElseExpre ($2,$4,$6)}
-	| WHILE logicExpr DO stmts OD {WhileExpre($2,$4)}
+	| IF logicExpr THEN stmts FI {IfExpre($2,List.rev $4)}
+	| IF logicExpr THEN stmts ELSE stmts FI {IfElseExpre ($2,List.rev $4,List.rev $6)}
+	| WHILE logicExpr DO stmts OD {WhileExpre($2,List.rev $4)}
 
 
 
@@ -206,7 +208,7 @@ localVarDecls:
 	| { [] }
 
 procBody:
-	| stmts { { localVarDecls = []; stmts = $1 } }
+	| stmts { { localVarDecls = []; stmts = List.rev $1 } }
 	| localVarDecls stmts { { localVarDecls = List.rev $1; stmts =  List.rev $2 } }
 
 
