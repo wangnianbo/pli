@@ -1,6 +1,6 @@
 ============================================
 vis/nianbow.out
-16:55:18_Monday_11_April_2016
+14:55:48_Monday_11_April_2016
 ============================================
 COMP90045 project - Test of parser and pretty-printer
 User:  nianbow
@@ -14,7 +14,7 @@ ocamlyacc parser.mly
 ocamlc  -c parser.mli
 ocamlopt  -g -c parser.ml
 ocamllex lexer.mll
-96 states, 5849 transitions, table size 23972 bytes
+96 states, 5237 transitions, table size 21524 bytes
 ocamlopt  -g -c lexer.ml
 ocamlopt  -g -c pprint.ml
 ocamlopt  -g -c bean.ml
@@ -44,11 +44,24 @@ Okay
 
 ******************************************   Parsing syn02.bean:
 
-Okay
+Mismatch:
+1,6c1
+< typedef int float
+< 
+< proc abc(val bool t, val float t', val int t'')
+< 
+<     t := true;
+< end
+---
+> ERROR OCCURRED : line 1 : Parsing error
 
 ******************************************   Parsing prpr1.bean:
 
-Okay
+Mismatch:
+18d17
+<         p(a);
+19a19
+>        p(a);
 
 ******************************************   Parsing prpr2.bean:
 
@@ -60,7 +73,32 @@ Okay
 
 ******************************************   Parsing prpr4.bean:
 
-Okay
+Mismatch:
+8d7
+<         m := n;
+10,19c9,19
+<             if m > 0 then
+<                 n := n - 1;
+<                 m := m - 1;
+<                 if m > 0 then
+<                     m := m - 1;
+<                 else
+<                     n := 6 * n + 4;
+<                 fi
+<             fi
+<         od
+---
+>            if m > 0 then
+>               if m > 0 then
+>                  m := m - 1;
+>              else
+>                  n := 6 * n + 4;
+>              fi
+>              m := m - 1;
+>              n := n - 1;
+>           fi
+>        od
+>        m := n;
 
 ******************************************   Parsing prpr5.bean:
 
@@ -114,65 +152,143 @@ Mismatch:
 
 ******************************************   Parsing prpr6.bean:
 
-Okay
+Mismatch:
+15,20d14
+<         diff := 0;
+<         while m * n > 0 do
+<             m := m - 1;
+<             n := n - 1;
+<             diff := diff + 1;
+<         od
+22,25c16,25
+<             n := diff;
+<         else
+<             m := diff;
+<         fi
+---
+>            n := diff;
+>        else
+>            m := diff;
+>        fi
+>        while m * n > 0 do
+>            diff := diff + 1;
+>           n := n - 1;
+>           m := m - 1;
+>        od
+>        diff := 0;
 
 ******************************************   Parsing bell.bean:
 
-Okay
+Mismatch:
+20,23c20,23
+<             out := 1;
+<         else
+<             bell(n - 1, n - 1, out);
+<         fi
+---
+>            out := 1;
+>        else
+>            bell(out, n - 1, n - 1);
+>        fi
+25,26d24
+<         bell(n, m - 1, resA);
+<         bell(n - 1, m - 1, resB);
+27a26,27
+>        bell(resB, m - 1, n - 1);
+>        bell(resA, m - 1, n);
 
 ******************************************   Parsing fib.bean:
 
-Okay
+Mismatch:
+20,21d19
+<         fib(n - 2, fA);
+<         fib(n - 1, fB);
+22a21,22
+>        fib(fB, n - 1);
+>        fib(fA, n - 2);
 
 ******************************************   Parsing gcd.bean:
 
-Okay
+Mismatch:
+9a10
+> 
+11a13
+> 
+12a15
+> 
+17a21
+> 
+22a27
+> 
+24a30
+> 
+30a37
+> 
 
 ******************************************   Parsing hail.bean:
 
-Okay
+Mismatch:
+1,30c1
+< 
+< proc main()
+<     int n;
+<     int result;
+< 
+<     n := 1;
+<     while n < 21 do
+<         hail(n, result);
+<         write result;
+<         write " ";
+<         n := n + 1;
+<     od
+<     write "\n";
+< end
+< 
+< proc hail(val int in, ref int out)
+<     int count;
+< 
+<     count := 1;
+<     if in = 1 then
+<         out := count;
+<     else
+<         if in / 2 * 2 = in then
+<             hail(in / 2, count);
+<         else
+<             hail(3 * in + 1, count);
+<         fi
+<         out := count + 1;
+<     fi
+< end
+---
+> ERROR OCCURRED : line 12 : Parsing error
 
 ******************************************   Parsing power.bean:
 
 Mismatch:
-24c24
+23,28c23,28
+<         power(x * x, n / 2, res);
 <         if 2 * (n / 2) = n then
+<             out := res;
+<         else
+<             out := x * res;
+<         fi
 ---
 >         if 2 * n / 2 = n then
+>            out := res;
+>        else
+>            out := x * res;
+>        fi
+>        power(res, n / 2, x * x);
 
 ******************************************   Parsing stddev.bean:
 
 Mismatch:
-1,27c1
-< 
-< proc main()
-<     int x;
-<     int sum;
-<     int sumsq;
-<     int mean;
-<     int count;
-<     int done;
-< 
-<     write "Type a list of integers, ending with a negative number\n";
-<     read x;
-<     done := x < 0;
-<     while not done do
-<         count := count + 1;
-<         sum := sum + x;
+10a11
+> 
+16c17
 <         sumsq := sumsq + x * x;
-<         read x;
-<         done := x < 0;
-<     od
-<     mean := sum / count;
-<     write "The mean is ";
-<     write mean;
-<     write "\n";
-<     write "The variance is ";
-<     write sumsq / count - mean * mean;
-<     write "\n";
-< end
 ---
-> ERROR OCCURRED : line 18 : Parsing error
+>         sumsq := sumsq + x*x;
 
 ******************************************   Parsing strange.bean:
 
@@ -181,6 +297,33 @@ Mismatch:
 < typedef {fA : int, fB : {gA : bool, fB : bool}} a_record
 ---
 > typedef {fA : int, fB : {gA : boolfB : bool}} a_record
+24d23
+<         m := n;
+26,36c25,36
+<             if m > 0 then
+<                 n := n - 1;
+<                 m := m - 1;
+<                 if m = 0 then
+<                     p(n);
+<                 fi
+<             else
+<                 m := n - m;
+<                 m := m - 1;
+<             fi
+<         od
+---
+>            if m > 0 then
+>               if m = 0 then
+>                  p(n);
+>              fi
+>              m := m - 1;
+>              n := n - 1;
+>           else
+>               m := m - 1;
+>              m := n - m;
+>           fi
+>        od
+>        m := n;
 
 ******************************************   Parsing lex11.bad.bean:
 proc main()
@@ -310,405 +453,8 @@ ERROR OCCURRED : line 1 : Parsing error
 --- End of testing for nianbow ---\n
 
 ============================================
-src/parser.mly
-16:55:14_Monday_11_April_2016
-============================================
-/* File parser.mly */
-%{
-open Ast
-%}
-%token <bool> BOOL_CONST
-%token <int> INT_CONST
-%token <string> STRING_CONST
-%token <string> IDENT
-%token BOOL INT
-%token WRITE READ
-%token ASSIGN
-%token LPAREN RPAREN
-
-%token <char> UNKNOW
-%token PLUS MINUS MUL DIV
-%token SEMICOLON COMMA STRUCTKEY
-
-%token WHILE DO OD
-%token IF THEN FI ELSE
-
-%token OR AND NOT EQUAL BIGGER SMALLER NOEQUAL NOBIGGER NOSMALLER
-%token INT BOOL
-
-%token LBRACKET RBRACKET
-
-%token PROC END COLON DOT 
-
-%token VAL REF
-
-%token EOF
-
-%left OR
-%left AND
-%nonassoc NOT
-%nonassoc EQUAL NOEQUAL SMALLER NOBIGGER BIGGER NOSMALLER
-%left PLUS MINUS        /* lowest precedence */
-%left MUL DIV         /* medium precedence */
-
-
-%start main             /* the entry point */
-%type <Ast.program> main
-%%
-main:
-	typedefs procs { {typedefs = List.rev $1; procs = List.rev $2} }    /*   ----------------   here should be rev  */
-;
-
-unMatch:
- UNKNOW {}
-/*---------Typedef------*/
-	
-typedefs:
-	/*multiple structs*/
-	| typedefs typedef  { $2::$1 }					/*   ----------------   change */
-	/*single struct*/
-	| typedef {$1 :: []}
-	| { [] }
-
-typedef:
-	/*single struct*/
-	| STRUCTKEY LBRACKET statements RBRACKET IDENT { Typedef ($3,$5) }
-	| STRUCTKEY beanType IDENT { TypedefBeanType ($2,$3) }
-	| STRUCTKEY IDENT IDENT { TypedefIdent ($2,$3) }
-
-				
-				
-
-statement:
-	| IDENT COLON IDENT          	 { Highstmt ($1, $3) }	
-	| IDENT COLON basictype          { Primitivestmt ($1, $3) }
-	| IDENT COLON innertypedef       { Blockstmt ($1, $3) }
-
-statements:
-	| statement COMMA statements { $1::$3 }
-	| statement {$1::[]}
-	| { [] }
-
-basictype:
-	| INT {Int}
-	| BOOL {Bool}
-
-innertypedef:
-			/*STRUCTKEY { expr } r_record*/
-  | LBRACKET statements RBRACKET { $2 }
-;
-
-/*------------PROCEDURE DEFINE*/
-
-procName:
-	| IDENT	{$1}
-
-lvalue:
-	| IDENT { LId($1) }
-	| IDENT DOT lvalue { LField($1,$3) }
-
-
-beanType:
-	| INT	{Int}
-	| BOOL	{Bool}
-
-varD:
-	|VAL { Val }
-
-refD:
-	|REF { Ref }
-
-varName:
-	| IDENT { $1 }
-
-
-
-alExpr:
-  | INT_CONST { Eint $1 }
-  | lvalue { ElvalInAlExpr $1 }
-  /* Binary operators */
-  | alExpr PLUS alExpr { Ebinop ($1, Op_add, $3) }
-  | alExpr MINUS alExpr { Ebinop ($1, Op_sub, $3) }
-  | alExpr MUL alExpr { Ebinop ($1, Op_mul, $3) }
-  | alExpr DIV alExpr { Ebinop ($1, Op_div, $3) }	
-  | MINUS alExpr { EunopInAlExpr ( Op_minus, $2) }
-  | LPAREN alExpr RPAREN { $2 }
-
-
-
-logicExpr:
-	| BOOL_CONST { Ebool ($1) }
-    | lvalue { ElvalInLogicExpr($1) }
-
-	| logicExpr OR logicExpr { Ebinop4 ($1, Op_or, $3) }
-	| logicExpr AND logicExpr { Ebinop4 ($1, Op_and, $3) }
-	| NOT logicExpr { EunopInLogicExpr ( Op_not, $2) }
-
-
-  	| alExpr EQUAL alExpr { Ebinop1 ($1, Op_eq, $3) }
-  	| alExpr NOEQUAL alExpr { Ebinop1 ($1, Op_not_eq, $3) }
-
-  	| alExpr EQUAL logicExpr { Ebinop2 ($1, Op_eq, $3) }
-  	| alExpr NOEQUAL logicExpr { Ebinop2 ($1, Op_not_eq, $3) }
-
-   	| logicExpr EQUAL alExpr { Ebinop3 ($1, Op_eq, $3) }
-  	| logicExpr NOEQUAL alExpr { Ebinop3 ($1, Op_not_eq, $3) }
-
-  	| logicExpr EQUAL logicExpr { Ebinop4 ($1, Op_eq, $3) }
-  	| logicExpr NOEQUAL logicExpr { Ebinop4 ($1, Op_not_eq, $3) }
-
-  	| alExpr SMALLER alExpr { Ebinop1 ($1, Op_small_than, $3) }
-  	| alExpr NOBIGGER alExpr { Ebinop1 ($1, Op_small_and_eq, $3) }
-  	| alExpr BIGGER alExpr { Ebinop1 ($1, Op_large, $3) }
-  	| alExpr NOSMALLER alExpr { Ebinop1 ($1, Op_large_and_eq, $3) }
-
-
-    | LPAREN logicExpr RPAREN { $2 }
-
-
-
-fieldInitializer:
-	| IDENT EQUAL rvalue { FieldInitializerForm($1,$3) }
-
-fieldInitializers:
-	| fieldInitializer COMMA fieldInitializers {$1::$3}
-	| fieldInitializer {$1::[]}
-	| {[]}
-
-structure:
-	| LBRACKET fieldInitializers RBRACKET	{ FieldInitializers($2) }
-
-rvalue:
-	| logicExpr {LogicexprInRvalue($1)}
-	| alExpr {AlexprInRvalue($1)}
-	| structure {Structure($1)}
-
-expr:
-	| logicExpr {LogicexprInExpr($1)}
-	| alExpr {AlexprInExpr($1)}
-	| lvalue {LvalueInExpr $1}
-
-exprList:
-	| exprList COMMA expr { $3 :: $1 }
-	| expr { $1 :: [] }
-	| { [] }
-
-
-stmt:
-	| lvalue ASSIGN rvalue SEMICOLON { Assign($1,$3) }
-	| READ IDENT SEMICOLON {ReadExpre $2}
-	| WRITE STRING_CONST SEMICOLON {WriteExpre $2}
-	| WRITE expr SEMICOLON {WriteVar $2}
-	| IDENT LPAREN exprList RPAREN SEMICOLON {ExprList($1,List.rev $3)}
-
-	| IF logicExpr THEN stmts FI {IfExpre($2,List.rev $4)}
-	| IF logicExpr THEN stmts ELSE stmts FI {IfElseExpre ($2,List.rev $4,List.rev $6)}
-	| WHILE logicExpr DO stmts OD {WhileExpre($2,List.rev $4)}
-
-
-
-stmts:
-	| stmts stmt { $2 :: $1 }
-	| stmt { $1 :: [] }
-
-
-localVarDecl:
-	| beanType varName SEMICOLON { ValTypeDecl($1,$2) }
-	| varName varName SEMICOLON { RefTypeDecl($1,$2) }
-
-
-localVarDecls:
-	| localVarDecls localVarDecl { $2 :: $1 }
-	| localVarDecl { $1 :: [] }
-	| { [] }
-
-procBody:
-	| stmts { { localVarDecls = []; stmts = List.rev $1 } }
-	| localVarDecls stmts { { localVarDecls = List.rev $1; stmts =  List.rev $2 } }
-
-
-
-paremeter:
-	| varD beanType varName 	{ValP($1,$2,$3)}
-	| refD varName varName 	{RefP($1,$2,$3)}
-	| varD varName varName	{ValBeanP($1,$2,$3)}
-	| refD beanType varName 	{RefBeanP($1,$2,$3)}
-
-
-
-paremeters:
-	| paremeter COMMA paremeters { $1 :: $3 }
-	| paremeter { $1 :: [] }
-	| { [] }
-
-procHeader:
-	| procName LPAREN paremeters RPAREN { ProcHeader($1,$3) }
-
-
-proc:
-	| PROC procHeader procBody END	{ Proc ($2 ,$3 ) }
-
-
-procs:
-	| procs proc { $2 :: $1 }
-	| proc { $1 :: [] }
-	| { [] } 
-============================================
-src/ast.ml
-16:55:14_Monday_11_April_2016
-============================================
-
-
-type procName = string
-
-type varName = string
-type stringExpre = string
-type refType = string
-
-type ident = string
-
-
-type beanType = 
-  | Bool
-  | Int
-
-
-type hightype = string
-(*type define 
-stmt->typeStmt
-varident->varName
-lowtype->beanType
-typeident->varName
-*)
-
-
-type typeStmt =
-	| Primitivestmt of (varName * beanType)
-  | Highstmt of (varName * hightype)
-	| Blockstmt of (varName * block)
-and block = typeStmt list
-
-type typedefform = 
-	| Typedef of (typeStmt list * varName)
-	| TypedefBeanType of (beanType * varName)
-	| TypedefIdent of (varName * varName)
-
-
-type format = typedefform list 
-
-(*procedure defin*)
-
-type lvalue =
-  | LId of varName
-  | LField of ( varName * lvalue )
-
-type varD = Val
-type refD = Ref
-
-type parameter = 
-  | ValP of (varD * beanType * varName)
-  | RefP of (refD * refType * varName)
-  | ValBeanP of (varD * refType * varName)
-  | RefBeanP of (refD * beanType * varName)
-
-
-type parameters = parameter list
-
-type procHeader = ProcHeader of ( procName * parameters ) 
-
-type binop =
-  | Op_or
-  | Op_and
-  | Op_eq
-  | Op_not_eq
-  | Op_small_than
-  | Op_small_and_eq
-  | Op_large
-  | Op_large_and_eq
-  | Op_add 
-  | Op_sub 
-  | Op_mul 
-  | Op_div
-
-type unop =
-  | Op_not
-  | Op_minus
-
-type alExpr =
-  | Eint of int
-  | ElvalInAlExpr of lvalue
-  | Ebinop of (alExpr * binop * alExpr)
-  | EunopInAlExpr of (unop * alExpr)
-
-type logicExpr = 
-  | Ebool of bool
-  | ElvalInLogicExpr of lvalue
-  | Ebinop1 of (alExpr * binop * alExpr)
-  | Ebinop2 of (alExpr * binop * logicExpr)
-  | Ebinop3 of (logicExpr * binop * alExpr)
-  | Ebinop4 of (logicExpr * binop * logicExpr)
-  | EunopInLogicExpr of (unop * logicExpr)
-
-
-type rvalue =
-  | LogicexprInRvalue of logicExpr 
-  | AlexprInRvalue of alExpr
-  | Structure of structure
-and fieldInitializer = 
-  | FieldInitializerForm of ( ident * rvalue )
-and structure = 
-  | FieldInitializers of fieldInitializer list
-
-
-type expr = 
-  | LogicexprInExpr of logicExpr 
-  | AlexprInExpr of alExpr
-  | LvalueInExpr of lvalue
-
-
-type exprList = expr list
-
-
-type stmt = 
-  | Assign of (lvalue * rvalue)
-  | ReadExpre of (varName)
-  | WriteExpre of (stringExpre)
-  | WriteVar of (expr)
-  | ExprList of (ident * exprList)
-  | IfExpre of ( logicExpr * ifStmts)
-  | IfElseExpre of (logicExpr * ifStmts * elseStmts)
-  | WhileExpre of (logicExpr * iwStmts)
- and
- iwStmts = stmt list	
- and
- ifStmts = stmt list
- and
- elseStmts = stmt list
-
-type localVarDecl = 
-  | ValTypeDecl of (beanType * varName)
-  | RefTypeDecl of (refType * varName)
-
-
-
-type procBody = {
-
-  localVarDecls: localVarDecl list;
-  stmts: stmt list
-
-}
-
-
-type proc = Proc of ( procHeader * procBody )
-
-type program = {
-  typedefs: typedefform list;
-  procs : proc list
-}
- 
-============================================
 src/bean.ml
-16:55:14_Monday_11_April_2016
+14:55:46_Monday_11_April_2016
 ============================================
 module P = Parser
 module L = Lexer
@@ -785,8 +531,26 @@ let _ = main ()
 
 
 ============================================
+src/Makefile.depend
+14:55:46_Monday_11_April_2016
+============================================
+bean.cmo :
+bean.cmx :
+ast.cmi :
+parser.cmi : ast.cmi
+pprint.cmi :
+ast.cmo : ast.cmi
+ast.cmx : ast.cmi
+lexer.cmo : parser.cmi
+lexer.cmx : parser.cmx
+parser.cmo : ast.cmi parser.cmi
+parser.cmx : ast.cmx parser.cmi
+pprint.cmo : pprint.cmi
+pprint.cmx : pprint.cmi
+bean.cmo :
+bean.cmx :============================================
 src/pprint.ml
-16:55:14_Monday_11_April_2016
+14:55:46_Monday_11_April_2016
 ============================================
 open Ast
 open Format
@@ -816,11 +580,7 @@ let rec get_typeStmts stmts=
 let get_typeBlock typeblock = 
 	match typeblock with
 	| Typedef(stmts,typeident) -> String.concat "" ["typedef ";"{";(get_typeStmts stmts);"} ";typeident] (*list of stmt*)
-	| TypedefBeanType(Bool,ident) -> String.concat "" ["typedef bool ";ident] (*list of stmt*)
-	| TypedefBeanType(Int,ident) -> String.concat "" ["typedef int ";ident] (*list of stmt*)
-	| TypedefIdent(ident,ident2) -> String.concat "" ["typedef "; ident ;" ";ident2] (*list of stmt*)
-	
-	
+
 (*format is typdef list*)
 
 
@@ -1095,7 +855,7 @@ let rec get_expList exprList=
 
 
 
-let add4Spaces  str =    String.concat "\n    "  [""; String.concat "\n    " ( Str.split (Str.regexp "\n") str )]
+let add4Spaces  str =    String.concat "\n    "  [""; String.concat "\n   " ( Str.split (Str.regexp "\n") str )]
 
 
 let rec get_stmts stmts = 
@@ -1153,26 +913,400 @@ let print_program fmt prog =
 	match prog with
 	| {typedefs = typedefs ; procs = procs} -> String.concat "" [(print_typeDef typedefs);(get_procs procs)]
 	============================================
-src/Makefile.depend
-16:55:14_Monday_11_April_2016
+src/ast.ml
+14:55:46_Monday_11_April_2016
 ============================================
-bean.cmo :
-bean.cmx :
-ast.cmi :
-parser.cmi : ast.cmi
-pprint.cmi :
-ast.cmo : ast.cmi
-ast.cmx : ast.cmi
-lexer.cmo : parser.cmi
-lexer.cmx : parser.cmx
-parser.cmo : ast.cmi parser.cmi
-parser.cmx : ast.cmx parser.cmi
-pprint.cmo : pprint.cmi
-pprint.cmx : pprint.cmi
-bean.cmo :
-bean.cmx :============================================
+
+
+type procName = string
+
+type varName = string
+type stringExpre = string
+type refType = string
+
+type ident = string
+
+
+type beanType = 
+  | Bool
+  | Int
+
+
+type hightype = string
+(*type define 
+stmt->typeStmt
+varident->varName
+lowtype->beanType
+typeident->varName
+*)
+
+
+type typeStmt =
+	| Primitivestmt of (varName * beanType)
+  | Highstmt of (varName * hightype)
+	| Blockstmt of (varName * block)
+and block = typeStmt list
+
+type typedefform = 
+	| Typedef of (typeStmt list * varName)
+
+type format = typedefform list 
+
+(*procedure defin*)
+
+type lvalue =
+  | LId of varName
+  | LField of ( varName * lvalue )
+
+type varD = Val
+type refD = Ref
+
+type parameter = 
+  | ValP of (varD * beanType * varName)
+  | RefP of (refD * refType * varName)
+  | ValBeanP of (varD * refType * varName)
+  | RefBeanP of (refD * beanType * varName)
+
+
+type parameters = parameter list
+
+type procHeader = ProcHeader of ( procName * parameters ) 
+
+type binop =
+  | Op_or
+  | Op_and
+  | Op_eq
+  | Op_not_eq
+  | Op_small_than
+  | Op_small_and_eq
+  | Op_large
+  | Op_large_and_eq
+  | Op_add 
+  | Op_sub 
+  | Op_mul 
+  | Op_div
+
+type unop =
+  | Op_not
+  | Op_minus
+
+type alExpr =
+  | Eint of int
+  | ElvalInAlExpr of lvalue
+  | Ebinop of (alExpr * binop * alExpr)
+  | EunopInAlExpr of (unop * alExpr)
+
+type logicExpr = 
+  | Ebool of bool
+  | ElvalInLogicExpr of lvalue
+  | Ebinop1 of (alExpr * binop * alExpr)
+  | Ebinop2 of (alExpr * binop * logicExpr)
+  | Ebinop3 of (logicExpr * binop * alExpr)
+  | Ebinop4 of (logicExpr * binop * logicExpr)
+  | EunopInLogicExpr of (unop * logicExpr)
+
+
+type rvalue =
+  | LogicexprInRvalue of logicExpr 
+  | AlexprInRvalue of alExpr
+  | Structure of structure
+and fieldInitializer = 
+  | FieldInitializerForm of ( ident * rvalue )
+and structure = 
+  | FieldInitializers of fieldInitializer list
+
+
+type expr = 
+  | LogicexprInExpr of logicExpr 
+  | AlexprInExpr of alExpr
+  | LvalueInExpr of lvalue
+
+
+type exprList = expr list
+
+
+type stmt = 
+  | Assign of (lvalue * rvalue)
+  | ReadExpre of (varName)
+  | WriteExpre of (stringExpre)
+  | WriteVar of (expr)
+  | ExprList of (ident * exprList)
+  | IfExpre of ( logicExpr * ifStmts)
+  | IfElseExpre of (logicExpr * ifStmts * elseStmts)
+  | WhileExpre of (logicExpr * iwStmts)
+ and
+ iwStmts = stmt list	
+ and
+ ifStmts = stmt list
+ and
+ elseStmts = stmt list
+
+type localVarDecl = 
+  | ValTypeDecl of (beanType * varName)
+  | RefTypeDecl of (refType * varName)
+
+
+
+type procBody = {
+
+  localVarDecls: localVarDecl list;
+  stmts: stmt list
+
+}
+
+
+type proc = Proc of ( procHeader * procBody )
+
+type program = {
+  typedefs: typedefform list;
+  procs : proc list
+}
+ 
+============================================
+src/parser.mly
+14:55:46_Monday_11_April_2016
+============================================
+/* File parser.mly */
+%{
+open Ast
+%}
+%token <bool> BOOL_CONST
+%token <int> INT_CONST
+%token <string> STRING_CONST
+%token <string> IDENT
+%token BOOL INT
+%token WRITE READ
+%token ASSIGN
+%token LPAREN RPAREN
+
+%token <char> UNKNOW
+%token PLUS MINUS MUL DIV
+%token SEMICOLON COMMA STRUCTKEY
+
+%token WHILE DO OD
+%token IF THEN FI ELSE
+
+%token OR AND NOT EQUAL BIGGER SMALLER NOEQUAL NOBIGGER NOSMALLER
+%token INT BOOL
+
+%token LBRACKET RBRACKET
+
+%token PROC END COLON DOT 
+
+%token VAL REF
+
+%token EOF
+
+%left OR
+%left AND
+%nonassoc NOT
+%nonassoc EQUAL NOEQUAL SMALLER NOBIGGER BIGGER NOSMALLER
+%left PLUS MINUS        /* lowest precedence */
+%left MUL DIV         /* medium precedence */
+
+
+%start main             /* the entry point */
+%type <Ast.program> main
+%%
+main:
+	typedefs procs { {typedefs = List.rev $1; procs = List.rev $2} }    /*   ----------------   here should be rev  */
+;
+
+unMatch:
+ UNKNOW {}
+/*---------Typedef------*/
+	
+typedefs:
+	/*multiple structs*/
+	| typedefs typedef  { $2::$1 }					/*   ----------------   change */
+	/*single struct*/
+	| typedef {$1 :: []}
+	| { [] }
+
+typedef:
+	/*single struct*/
+	STRUCTKEY LBRACKET statements RBRACKET IDENT { Typedef ($3,$5) }
+	
+				
+				
+
+statement:
+	| IDENT COLON IDENT          	 { Highstmt ($1, $3) }	
+	| IDENT COLON basictype          { Primitivestmt ($1, $3) }
+	| IDENT COLON innertypedef       { Blockstmt ($1, $3) }
+
+statements:
+	| statement COMMA statements { $1::$3 }
+	| statement {$1::[]}
+	| { [] }
+
+basictype:
+	| INT {Int}
+	| BOOL {Bool}
+
+innertypedef:
+			/*STRUCTKEY { expr } r_record*/
+  | LBRACKET statements RBRACKET { $2 }
+;
+
+/*------------PROCEDURE DEFINE*/
+
+procName:
+	| IDENT	{$1}
+
+lvalue:
+	| IDENT { LId($1) }
+	| IDENT DOT lvalue { LField($1,$3) }
+
+
+beanType:
+	| INT	{Int}
+	| BOOL	{Bool}
+
+varD:
+	|VAL { Val }
+
+refD:
+	|REF { Ref }
+
+varName:
+	| IDENT { $1 }
+
+
+
+alExpr:
+  | INT_CONST { Eint $1 }
+  | lvalue { ElvalInAlExpr $1 }
+  /* Binary operators */
+  | alExpr PLUS alExpr { Ebinop ($1, Op_add, $3) }
+  | alExpr MINUS alExpr { Ebinop ($1, Op_sub, $3) }
+  | alExpr MUL alExpr { Ebinop ($1, Op_mul, $3) }
+  | alExpr DIV alExpr { Ebinop ($1, Op_div, $3) }	
+  | MINUS alExpr { EunopInAlExpr ( Op_minus, $2) }
+  | LPAREN alExpr RPAREN { $2 }
+
+
+
+logicExpr:
+	| BOOL_CONST { Ebool ($1) }
+    | lvalue { ElvalInLogicExpr($1) }
+
+	| logicExpr OR logicExpr { Ebinop4 ($1, Op_or, $3) }
+	| logicExpr AND logicExpr { Ebinop4 ($1, Op_and, $3) }
+	| NOT logicExpr { EunopInLogicExpr ( Op_not, $2) }
+
+
+  	| alExpr EQUAL alExpr { Ebinop1 ($1, Op_eq, $3) }
+  	| alExpr NOEQUAL alExpr { Ebinop1 ($1, Op_not_eq, $3) }
+
+  	| alExpr EQUAL logicExpr { Ebinop2 ($1, Op_eq, $3) }
+  	| alExpr NOEQUAL logicExpr { Ebinop2 ($1, Op_not_eq, $3) }
+
+   	| logicExpr EQUAL alExpr { Ebinop3 ($1, Op_eq, $3) }
+  	| logicExpr NOEQUAL alExpr { Ebinop3 ($1, Op_not_eq, $3) }
+
+  	| logicExpr EQUAL logicExpr { Ebinop4 ($1, Op_eq, $3) }
+  	| logicExpr NOEQUAL logicExpr { Ebinop4 ($1, Op_not_eq, $3) }
+
+  	| alExpr SMALLER alExpr { Ebinop1 ($1, Op_small_than, $3) }
+  	| alExpr NOBIGGER alExpr { Ebinop1 ($1, Op_small_and_eq, $3) }
+  	| alExpr BIGGER alExpr { Ebinop1 ($1, Op_large, $3) }
+  	| alExpr NOSMALLER alExpr { Ebinop1 ($1, Op_large_and_eq, $3) }
+
+
+    | LPAREN logicExpr RPAREN { $2 }
+
+
+
+fieldInitializer:
+	| IDENT EQUAL rvalue { FieldInitializerForm($1,$3) }
+
+fieldInitializers:
+	| fieldInitializer COMMA fieldInitializers {$1::$3}
+	| fieldInitializer {$1::[]}
+	| {[]}
+
+structure:
+	| LBRACKET fieldInitializers RBRACKET	{ FieldInitializers($2) }
+
+rvalue:
+	| logicExpr {LogicexprInRvalue($1)}
+	| alExpr {AlexprInRvalue($1)}
+	| structure {Structure($1)}
+
+expr:
+	| logicExpr {LogicexprInExpr($1)}
+	| alExpr {AlexprInExpr($1)}
+	| lvalue {LvalueInExpr $1}
+
+exprList:
+	| exprList COMMA expr { $3 :: $1 }
+	| expr { $1 :: [] }
+	| { [] }
+
+
+stmt:
+	| lvalue ASSIGN rvalue SEMICOLON { Assign($1,$3) }
+	| READ IDENT SEMICOLON {ReadExpre $2}
+	| WRITE STRING_CONST SEMICOLON {WriteExpre $2}
+	| WRITE expr SEMICOLON {WriteVar $2}
+	| IDENT LPAREN exprList RPAREN SEMICOLON {ExprList($1,$3)}
+
+	| IF logicExpr THEN stmts FI {IfExpre($2,$4)}
+	| IF logicExpr THEN stmts ELSE stmts FI {IfElseExpre ($2,$4,$6)}
+	| WHILE logicExpr DO stmts OD {WhileExpre($2,$4)}
+
+
+
+stmts:
+	| stmts stmt { $2 :: $1 }
+	| stmt { $1 :: [] }
+
+
+localVarDecl:
+	| beanType varName SEMICOLON { ValTypeDecl($1,$2) }
+	| varName varName SEMICOLON { RefTypeDecl($1,$2) }
+
+
+localVarDecls:
+	| localVarDecls localVarDecl { $2 :: $1 }
+	| localVarDecl { $1 :: [] }
+	| { [] }
+
+procBody:
+	| stmts { { localVarDecls = []; stmts = $1 } }
+	| localVarDecls stmts { { localVarDecls = List.rev $1; stmts =  List.rev $2 } }
+
+
+
+paremeter:
+	| varD beanType varName 	{ValP($1,$2,$3)}
+	| refD varName varName 	{RefP($1,$2,$3)}
+	| varD varName varName	{ValBeanP($1,$2,$3)}
+	| refD beanType varName 	{RefBeanP($1,$2,$3)}
+
+
+
+paremeters:
+	| paremeter COMMA paremeters { $1 :: $3 }
+	| paremeter { $1 :: [] }
+	| { [] }
+
+procHeader:
+	| procName LPAREN paremeters RPAREN { ProcHeader($1,$3) }
+
+
+proc:
+	| PROC procHeader procBody END	{ Proc ($2 ,$3 ) }
+
+
+procs:
+	| procs proc { $2 :: $1 }
+	| proc { $1 :: [] }
+	| { [] } 
+============================================
 src/Makefile
-16:55:14_Monday_11_April_2016
+14:55:46_Monday_11_April_2016
 ============================================
 TARGETS = bean
 TARGETS_BYTE=$(TARGETS:%=%.byte)
@@ -1231,7 +1365,7 @@ depend: lexer.ml parser.ml
 -include Makefile.depend
 ============================================
 src/lexer.mll
-16:55:14_Monday_11_April_2016
+14:55:46_Monday_11_April_2016
 ============================================
 (* File lexer.mll *)
 {
@@ -1245,12 +1379,12 @@ exception Eof
 }
 let digit = ['0' - '9']
 let alpha = ['a' - 'z' 'A' - 'Z']
-let alnum = alpha | digit | '_' | '\''
+let alnum = alpha | digit | '_'
 let digits = digit+
-let ident = ('_' | alpha ) alnum*
+let ident = ('_' | alpha) alnum*
 let structKey = "typedef"
 
-let stringExc = [^'\"' '\t' '\n'] 
+let stringExc = [^'\"'] | [^'\t']
 let stringReq = '\"' stringExc * '\"'
 let comment = "#" [^'\n']*
 

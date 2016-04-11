@@ -83,7 +83,7 @@ type alExpr =
 
 type logicExpr = 
   | Ebool of bool
-  | ElvalInLogicExpr of lvalue
+  | ElvalInLogicExpr of varName
   | Ebinop1 of (alExpr * binop * alExpr)
   | Ebinop2 of (alExpr * binop * logicExpr)
   | Ebinop3 of (logicExpr * binop * alExpr)

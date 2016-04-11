@@ -1,31 +1,29 @@
+
+typedef {fA : int, fB : {gA : bool, fB : bool}} a_record
+
  proc main()
      int x;
-     int y;
-     int temp;
-     int quotient;
-     int remainder;
+     int sum;
+     int sumsq;
+     int mean;
+     int count;
+     int done;
  
- write "fef"; write "Input two positive integers: "; 
-     read x;     read x;     read y;
-     write "\n";
-     if x < y then
-         temp := x;
-         x := y;
-         y := temp;
-     fi
-     write "The gcd of ";
-     write x;
-     write " and ";
-     write y;
-     write " is ";
-     quotient := x / y;
-     remainder := x - quotient * y;
-     while remainder > 0 do
-         x := y;
-         y := remainder;
-         quotient := x / y;
-         remainder := x - quotient * y;
+     write "Type a list of integers, ending with a negative number\n";
+     read x;
+     done := x < 0;
+     while not done = 1 do
+         count := count + 1;
+         sum := sum + x;
+         sumsq := sumsq + x * x;
+         read x;
+         done := x < 0;
      od
-     write y;
-     write "\n";     read x;
- end
+     mean := sum / count;
+     write "The mean is ";
+     write mean;
+     write "\n";
+     write "The variance is ";
+     write sumsq / count - mean * mean;
+     write "\n";
+end
