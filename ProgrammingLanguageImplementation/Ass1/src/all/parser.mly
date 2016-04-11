@@ -108,23 +108,24 @@ varName:
 
 alExpr:
   | INT_CONST { Eint $1 }
-  | lvalue { Elval $1 }
+  | lvalue { ElvalInAlExpr $1 }
   /* Binary operators */
   | alExpr PLUS alExpr { Ebinop ($1, Op_add, $3) }
   | alExpr MINUS alExpr { Ebinop ($1, Op_sub, $3) }
   | alExpr MUL alExpr { Ebinop ($1, Op_mul, $3) }
   | alExpr DIV alExpr { Ebinop ($1, Op_div, $3) }	
-  | MINUS alExpr { Eunop ( Op_minus, $2) }
+  | MINUS alExpr { EunopInAlExpr ( Op_minus, $2) }
   | LPAREN alExpr RPAREN { $2 }
 
 
 
 logicExpr:
 	| BOOL_CONST { Ebool ($1) }
+    | lvalue { ElvalInLogicExpr($1) }
 
 	| logicExpr OR logicExpr { Ebinop4 ($1, Op_or, $3) }
 	| logicExpr AND logicExpr { Ebinop4 ($1, Op_and, $3) }
-	| NOT logicExpr { Eunop ( Op_not, $2) }
+	| NOT logicExpr { EunopInLogicExpr ( Op_not, $2) }
 
 
   	| alExpr EQUAL alExpr { Ebinop1 ($1, Op_eq, $3) }
@@ -161,14 +162,14 @@ structure:
 	| LBRACKET fieldInitializers RBRACKET	{ FieldInitializers($2) }
 
 rvalue:
-	| logicExpr {Logicexpr($1)}
-	| alExpr {Alexpr($1)}
+	| logicExpr {LogicexprInRvalue($1)}
+	| alExpr {AlexprInRvalue($1)}
 	| structure {Structure($1)}
 
 expr:
-	| logicExpr {Logicexpr($1)}
-	| alExpr {Alexpr($1)}
-	| lvalue {Lvalue $1}
+	| logicExpr {LogicexprInExpr($1)}
+	| alExpr {AlexprInExpr($1)}
+	| lvalue {LvalueInExpr $1}
 
 exprList:
 	| exprList COMMA expr { $3 :: $1 }
@@ -213,6 +214,7 @@ procBody:
 paremeter:
 	| varD beanType varName 	{ValP($1,$2,$3)}
 	| refD varName varName 	{RefP($1,$2,$3)}
+	| varD varName varName	{ValBeanP($1,$2,$3)}
 	| refD beanType varName 	{RefBeanP($1,$2,$3)}
 
 

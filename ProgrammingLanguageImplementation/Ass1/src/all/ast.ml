@@ -46,6 +46,7 @@ type refD = Ref
 type parameter = 
   | ValP of (varD * beanType * varName)
   | RefP of (refD * refType * varName)
+  | ValBeanP of (varD * refType * varName)
   | RefBeanP of (refD * beanType * varName)
 
 
@@ -73,22 +74,23 @@ type unop =
 
 type alExpr =
   | Eint of int
-  | Elval of lvalue
+  | ElvalInAlExpr of lvalue
   | Ebinop of (alExpr * binop * alExpr)
-  | Eunop of (unop * alExpr)
+  | EunopInAlExpr of (unop * alExpr)
 
 type logicExpr = 
   | Ebool of bool
+  | ElvalInLogicExpr of lvalue
   | Ebinop1 of (alExpr * binop * alExpr)
   | Ebinop2 of (alExpr * binop * logicExpr)
   | Ebinop3 of (logicExpr * binop * alExpr)
   | Ebinop4 of (logicExpr * binop * logicExpr)
-  | Eunop of (unop * logicExpr)
+  | EunopInLogicExpr of (unop * logicExpr)
 
 
 type rvalue =
-  | Logicexpr of logicExpr 
-  | Alexpr of alExpr
+  | LogicexprInRvalue of logicExpr 
+  | AlexprInRvalue of alExpr
   | Structure of structure
 and fieldInitializer = 
   | FieldInitializerForm of ( ident * rvalue )
@@ -97,9 +99,9 @@ and structure =
 
 
 type expr = 
-  | Logicexpr of logicExpr 
-  | Alexpr of alExpr
-  | Lvalue of lvalue
+  | LogicexprInExpr of logicExpr 
+  | AlexprInExpr of alExpr
+  | LvalueInExpr of lvalue
 
 
 type exprList = expr list
@@ -120,6 +122,7 @@ type stmt =
  ifStmts = stmt list
  and
  elseStmts = stmt list
+
 type localVarDecl = 
   | ValTypeDecl of (beanType * varName)
   | RefTypeDecl of (refType * varName)
