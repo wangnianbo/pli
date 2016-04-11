@@ -15,14 +15,14 @@ and analysis block =
 	match block with
 	| [] -> ""
 	| x::[] -> String.concat "" [get_typeStmt x]
-	| x::tail -> String.concat "" [get_typeStmt x;", " ;analysis tail]
+	| x::tail -> String.concat "" [get_typeStmt x;", " ; analysis tail]
 
 
 let rec get_typeStmts stmts=
 	match stmts with
 	| [] -> ""
-	| x::[] -> String.concat "" [(get_typeStmt x)]
-	| x::tail -> String.concat "" [(get_typeStmt x) ;", " ;(get_typeStmts tail)]
+	| x::tail -> if List.length stmts > 1 then String.concat "" [(get_typeStmt x) ;", " ;(get_typeStmts tail)]
+											else get_typeStmt x
 
 let get_typeBlock typeblock = 
 	match typeblock with
@@ -53,7 +53,8 @@ let rec get_parameters parameters =
 	match parameters with
 	| [] -> ""
 	| x::[] -> String.concat "" [(get_parameter x)]
-	| x::tail -> String.concat "" [(get_parameter x) ; ", " ;(get_parameters tail)]
+	| x::tail -> if List.length parameters > 1 then String.concat "" [(get_parameter x) ; ", " ;(get_parameters tail)]
+												else get_parameter x
 
 
 let get_proc_header procHeader = 
@@ -182,7 +183,7 @@ and get_expr_pre_is_minus expr =
 let rec get_logicExpr expr = 
 	match expr with
 	| Ebool(boolVal) -> String.concat "" [(string_of_bool boolVal)]
-	| ElvalInLogicExpr(ident) -> String.concat "" [ident]
+	| ElvalInLogicExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
 
 	| Ebinop4 (expr1,Op_or,expr2) -> String.concat "" [(get_logicExpr expr1);" or ";(get_logicExpr expr2)]
 	| Ebinop4 (expr1,Op_and,expr2) -> String.concat "" [(get_pre_or_followed_is_and expr1);" and ";(get_pre_or_followed_is_and expr2)]
@@ -213,7 +214,7 @@ let rec get_logicExpr expr =
 and get_pre_or_followed_is_and expr = 
 	match expr with
 	| Ebool(boolVal) -> String.concat "" [(string_of_bool boolVal)]
-	| ElvalInLogicExpr(ident) -> String.concat "" [ident]
+	| ElvalInLogicExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
 
 	| Ebinop4 (expr1,Op_eq,expr2) -> String.concat "" ["(";(get_logicExpr expr1);" or ";(get_logicExpr expr2);")"]
 	| _ -> String.concat "" [(get_logicExpr expr)] 
@@ -221,7 +222,7 @@ and get_pre_or_followed_is_and expr =
 and get_followed_is_relation expr = 
 	match expr with
 	| Ebool(boolVal) -> String.concat "" [(string_of_bool boolVal)]
-	| ElvalInLogicExpr(ident) -> String.concat "" [ident]
+	| ElvalInLogicExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
 
 	| Ebinop4 (expr1,Op_eq,expr2) -> String.concat "" ["(";(get_logicExpr expr1);" or ";(get_logicExpr expr2);")"]
 	| Ebinop4 (expr1,Op_not_eq,expr2) -> String.concat "" ["(";(get_pre_or_followed_is_and expr1);" and ";(get_pre_or_followed_is_and expr2);")"]
@@ -250,14 +251,14 @@ and get_pre_is_relation_with_al expr =
 and get_pre_is_relation expr = 
 	match expr with
 	| Ebool(boolVal) -> String.concat "" [(string_of_bool boolVal)]
-	| ElvalInLogicExpr(ident) -> String.concat "" [ident]
+	| ElvalInLogicExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
 
 	| _ -> String.concat "" ["(";(get_logicExpr expr);")"] 
 
 and get_pre_is_not expr = 
 	match expr with
 	| Ebool(boolVal) -> String.concat "" [(string_of_bool boolVal)]
-	| ElvalInLogicExpr(ident) -> String.concat "" [ident]
+	| ElvalInLogicExpr(lvalue) -> String.concat "" [(get_lvalue lvalue)]
 
 	| Ebinop4 (expr1,Op_eq,expr2) -> String.concat "" ["(";(get_logicExpr expr1);" or ";(get_logicExpr expr2);")"]
 	| Ebinop4 (expr1,Op_not_eq,expr2) -> String.concat "" ["(";(get_pre_or_followed_is_and expr1);" and ";(get_pre_or_followed_is_and expr2);")"]
@@ -305,7 +306,7 @@ let rec get_expList exprList=
 
 
 
-let add4Spaces  str =    String.concat "\n   "  [""; String.concat "\n   " ( Str.split (Str.regexp "\n") str )]
+let add4Spaces  str =    String.concat "\n    "  [""; String.concat "\n    " ( Str.split (Str.regexp "\n") str )]
 
 
 let rec get_stmts stmts = 

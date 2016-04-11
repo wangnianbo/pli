@@ -20,8 +20,8 @@ let stringReq = '\"' stringExc * '\"'
 let comment = "#" [^'\n']*
 
 rule token = parse
-  | stringReq as stringArg     { !line_number, STRING_CONST stringArg }
-  | comment { token lexbuf } 
+  | stringReq as stringArg     {incr line_number; !line_number, STRING_CONST stringArg }
+  | comment {incr line_number; token lexbuf } 
   | [' ' '\t']    { token lexbuf }     (* skip blanks *)
   | '\n'          { incr line_number; Lexing.new_line lexbuf ; token lexbuf }
   | '-'?['0'-'9']+ as lxm {!line_number, INT_CONST(int_of_string lxm) }
