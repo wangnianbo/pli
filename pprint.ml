@@ -308,6 +308,11 @@ let rec get_expList exprList=
 
 let add4Spaces  str =    String.concat "\n    "  [""; String.concat "\n    " ( Str.split (Str.regexp "\n") str )]
 
+let get_simpleLogicExpr simpleLogicExpr =
+	match simpleLogicExpr with
+	| ElvalInSimpleLogicExpr(lvalue) -> String.concat "" [get_lvalue lvalue]
+	| EunopInSimpleLogicExpr(binop,lvalue) -> String.concat "" ["not ";(get_lvalue lvalue)]
+
 
 let rec get_stmts stmts = 
 	match stmts with
@@ -321,8 +326,17 @@ let rec get_stmts stmts =
 					 | WriteExpre (stringExpre) ->  String.concat "" [get_4spaces;"write "; stringExpre; ";"]
 					 | WriteVar  (expr)  ->  String.concat "" [get_4spaces;"write "; get_expr expr; ";"]
 					 | ExprList(ident,exprList) -> String.concat "" [get_4spaces;ident;"("; get_expList exprList; ")";";"]
+					 
+					 | IfExpreInSimple (simpleLogicExpr,ifStmts)  ->  String.concat "" [get_4spaces;"if ";(get_simpleLogicExpr simpleLogicExpr);" then";add4Spaces(get_stmts ifStmts); "\n    fi"]
+
 					 | IfExpre (logicExpr,ifStmts)  ->  String.concat "" [get_4spaces;"if ";(get_logicExpr logicExpr);" then";add4Spaces(get_stmts ifStmts); "\n    fi"]
+					 
+					 | IfElseExpreInSimple (simpleLogicExpr,ifElseIfStmts, ifElseElseStmts) -> String.concat "" [get_4spaces;"if ";(get_simpleLogicExpr simpleLogicExpr);" then"; ( add4Spaces(get_stmts ifElseIfStmts)); "\n    else";  add4Spaces(get_stmts ifElseElseStmts); "\n    fi"]
+					 
 					 | IfElseExpre (logicExpr,ifElseIfStmts, ifElseElseStmts) -> String.concat "" [get_4spaces;"if ";(get_logicExpr logicExpr);" then"; ( add4Spaces(get_stmts ifElseIfStmts)); "\n    else";  add4Spaces(get_stmts ifElseElseStmts); "\n    fi"]
+
+					 | WhileExpreInSimple (simpleLogicExpr,whileStmts) ->  String.concat "" [get_4spaces;"while ";(get_simpleLogicExpr simpleLogicExpr);" do"; add4Spaces(get_stmts whileStmts); "\n    od"]
+					 
 					 | WhileExpre (logicExpr,whileStmts) ->  String.concat "" [get_4spaces;"while ";(get_logicExpr logicExpr);" do"; add4Spaces(get_stmts whileStmts); "\n    od"]
 
 
